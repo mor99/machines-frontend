@@ -1,0 +1,17 @@
+*.log
+*.log.*
+*.bak
+**/node_modules/
+**/dist/
+**/.vscode/
+**/.idea/
+**/npm-debug.log
+.eslintcache
+.svn/
+.DS_Store
+debug.log
+nohup.out
+yarn-error.log
+package-lock.json
+server/tmp
+yarn.lock

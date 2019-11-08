@@ -1,0 +1,376 @@
+@global-prefix: ~"common";
+@theme-color: #00a6e2; // 网站主题颜色
+@default-text-color: #444e65; // 网站字体默认颜色
+@default-border-color: #bfc0c2;// border颜色
+@disabled-color: #d5dadd; // 阻止状态颜色
+@baseRadius: 4px;
+@contentTitleFontSize: .16rem; // 内容模块title 字体大小
+@iconColor: #8792a2; // icon 图标默认颜色
+@headerHeight: 0.7rem; // 顶部header高度
+@subMenuHeight: .6rem; // 二级菜单高度
+@menuHeight: .5rem; // 菜单选项高度
+@text-notice-icon-color: #7a8292; // 搜索栏备注文字颜色
+@text-disable-color: #7a8292;
+@placeholder-color: #444e65;
+@notice-red-color: red; // 危险操作颜色
+@shadowColor: hsla(223, 20%, 90%, 0.5); // 阴影颜色 左侧菜单和中间content内容
+@form-margin-left: 1.2rem;
+@text-active-color: #0469e5;
+@text-color-bold: #262626;
+@text-color-light: rgba(38, 38, 38, 0.65);
+@text-color-disabled: rgba(0, 0, 0, 0.65);
+@border-top-color: #e5e5e5;
+@header-img-bg: #996b3d;
+@status-color-green: #33cc33;
+@status-color-orange: #ff9900;
+@status-color-blue: #6699ff;
+@status-color-gray: #999999;
+@primary-color: #1890ff;
+@border-color: #e8e8e8;
+.@{global-prefix}-app{
+  padding: 0.15rem 0.4rem;
+  background-color: #fff;
+  border-radius: 4px;
+}
+.@{global-prefix}-shadow{ // 通用阴影样式
+  box-shadow: 0 0 7px 3px @shadowColor;
+}
+.@{global-prefix}-detail{
+  .detail-items-box{
+    margin-left: .16rem;
+  }
+  .detail-item{
+    &>div{
+      min-height: .48rem;
+      font-size: .14rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .detail-item-title{
+      font-size: .14rem;
+      word-break: keep-all;
+      color: @default-text-color;
+    }
+    .detail-item-content{
+      color: lighten(@default-text-color, 20%);
+      padding-top: .03rem;
+      flex: 1;
+    }
+  }
+}
+.@{global-prefix}-form-add{
+  .detail-list-box{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    .detail-list{
+      flex: 1;
+    }
+  }
+  .ant-form{
+    width: 4rem;
+    margin-left: @form-margin-left;
+  }
+}
+.@{global-prefix}-form-submit{
+  position: fixed;
+  left: 3.08rem;
+  width: calc(~"100% - 3.56rem");
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .6rem 0;
+  button+button{// 输入框侯后面的按钮间隔32px
+    margin-left: .24rem;
+  }
+}
+.@{global-prefix}-form-submit-box{
+  width: 100%;
+  height: 1.64rem;
+}
+// .@{global-prefix}-app{
+//         margin-bottom:20px;
+// }
+.@{global-prefix}-subtitle{
+  // margin-top:1px;
+  // .ant-calendar-picker{
+  // }
+  // position: relative;
+  // height: .32rem;
+  // display: flex;
+  // justify-content: flex-start;
+  // align-items: center;
+  // padding-left: .24rem;
+  // font-size: @contentTitleFontSize;
+  // color: @default-text-color;
+  // margin-bottom: .16rem;
+  // &:before{
+  //   content: '';
+  //   position: absolute;
+  //   left: 0;
+  //   top: 0;
+  //   height: .32rem;
+  //   width: 4px;
+  //   border-radius: 2px;
+  //   background-color: @theme-color;
+  // }
+  font-size: @contentTitleFontSize;
+  color: #000;
+  margin-bottom: 0.24rem;
+}
+
+.@{global-prefix}-file-list{
+  &>div{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    cursor: pointer;
+    padding: 0 6px;
+    max-width: 4rem;
+    >a{
+      width: .6rem;
+    }
+    >p{
+      flex: 1;
+    }
+    &:hover{
+      background-color: fadeout(@theme-color, 80%);
+    }
+  }
+}
+.@{global-prefix}-img-list{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  >img{
+    width: .8rem;
+    margin: 0 .2rem .2rem 0;
+  }
+}
+// 超出省略号
+.@{global-prefix}-overflow-dot{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/***************滚动条****************/
+*::-webkit-scrollbar-track
+{
+  background-color: transparent;
+}
+/*定义滚动条高宽及背景*/
+*::-webkit-scrollbar
+{
+  display: block;
+  width: 6px;
+  height: 6px;
+  //background-color: #282828;
+}
+*::-webkit-scrollbar-thumb
+{
+  background-color: rgba(23, 126, 230, 0.6);
+  border-radius: 3px;
+}
+/*定义滚动条*/
+/****************容器*****************/
+.@{global-prefix}-container,.@{global-prefix}-search-box {
+  border-radius: @baseRadius;
+  // padding: .24rem;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  &+.@{global-prefix}-container{
+    margin-top: .24rem;
+  }
+}
+/****************日期*****************/
+
+/****************选择*****************/
+.@{global-prefix}-subtitle{//信息统计下拉框
+  .ant-select{
+    line-height: 40px;
+  }
+}
+/****************搜索*****************/
+.@{global-prefix}-search-box {// 条件搜索
+  padding: .16rem 0;
+  margin-bottom: .25rem;
+  >div{ // 子内容，多少行
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: .24rem;
+    .item-input{ // 输入框选项, 二个输入框间隔24px
+      margin-right: .24rem;
+      height: .4rem;
+      display: inline-flex;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      .label{// 输入框label距离输入框8px
+        margin-right: .08rem;
+        font-size: .16rem;
+      }
+      .ant-select{//下拉框内容与上边框的距离
+        line-height: 40px;
+        // height:15px;
+        // text-align-last:center;
+      }
+    }
+    .item-desc{ // 简介
+      font-size: .14rem;
+      color: @text-notice-icon-color;
+    }
+    .item-btn { // 按钮选项，二个按钮间隔24px
+      margin-right: .24rem;
+      .ant-btn{
+        font-size: .16rem;
+        .icon{
+          padding-right: .10rem;
+        }
+      }
+      &.spread{
+        cursor: pointer;
+        color: @theme-color;
+        &:hover{
+          color: lighten(@theme-color, 10%);
+        }
+      }
+    }
+    .item-input+.item-btn{// 输入框侯后面的按钮间隔32px
+      margin-left: .32px;
+    }
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+  .search-inputs{
+    margin-bottom: 0;
+    .item-input,.item-btn{
+      margin-bottom: .24rem;
+    }
+  }
+}
+/*************table action******************/
+.@{global-prefix}-table-action{
+  display: flex;
+  flex-wrap: nowrap;
+  >span{
+    padding-right: .08rem;
+    font-size: .16rem;
+    cursor: pointer;
+    color: @text-active-color;
+    &.disabled{ // 不能点击
+      color: @text-disable-color;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+    &.del{ // 删除
+      color: @notice-red-color;
+    }
+    &:hover{
+      opacity: .7;
+    }
+  }
+}
+.@{global-prefix}-table-action-menu{
+  .ant-dropdown-menu-item{
+    text-align: center;
+  }
+  .del{
+    color: @notice-red-color;
+  }
+}
+// 弹窗
+.@{global-prefix}-modal{
+  .ant-select{
+    line-height: 40px;
+  }
+  .ant-modal-content{
+    border-radius: .04rem;
+    .ant-modal-close-x{
+      width: .48rem;
+      height: .48rem;
+      line-height: .48rem;
+      font-size: .16rem;
+      color: #fff;
+    }
+    .ant-calendar-picker{
+      width: 100%;
+    }
+    .ant-modal-footer{
+      border-top: none;
+      padding-bottom: .4rem;
+      padding-top: .2rem;
+      .@{global-prefix}-modal-footer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span{
+          font-size: .16rem;
+        }
+        >span{
+          color: @placeholder-color;
+          padding: .08rem .15rem;
+
+          cursor: pointer;
+          &:hover{
+            opacity: .7;
+          }
+        }
+      }
+    }
+    .ant-modal-body{
+      padding: .24rem .24rem 0rem .24rem;
+    }
+  }
+  .ant-modal-header{
+    height: .48rem;
+    padding: 0;
+    .ant-modal-title{
+      height: .48rem;
+      background-color: @theme-color;
+      display: flex;
+      align-items: center;
+      color: white;
+      justify-content: center;
+      font-size: .18rem;
+    }
+  }
+  .ant-modal-footer{
+    >div{
+      text-align: center;
+      button + button{
+        margin-left: .24rem;
+      }
+    }
+  }
+}
+
+.ele-disabled{
+  display: inline-block;
+  position: relative;
+  .ele-disabled-content{
+    display: inline-block;
+    pointer-events: none;
+    opacity: .6;
+  }
+  &:after{
+    content: '';
+    cursor: not-allowed;
+    position: absolute;
+    display: 'block';
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    opacity: 0;
+  }
+}

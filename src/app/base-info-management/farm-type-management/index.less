@@ -1,0 +1,64 @@
+@import '../../../assets/css/common.less';
+.farm-type-management{
+  .col-contanier{
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 0.3rem;
+    .col-content{
+      padding: 0.4rem 0.24rem;
+      display: flex;
+      align-items: center;
+      >div{
+        flex: 1;
+      }
+      .col-img-wrap{
+        max-width: 0.6rem;
+        min-width: 0.6rem;
+        width: 0.6rem;
+        margin-right: 0.3rem;
+        img{
+          width: 100%;
+        }
+      }
+      p{
+        color: @text-color-bold;
+        margin-bottom: 0.3rem;
+        .light{
+          color: @text-color-light;
+        }
+      }
+      p:last-child{
+        margin-bottom: 0;
+      }
+    }
+    .col-title{
+      font-size: 0.16rem;
+    }
+    .col-footer{
+      background-color: #f7f9fa;
+      padding: 0.18rem;
+      text-align: center;
+      border-top: 1px solid @border-top-color;
+      color: @text-color-light;
+    }
+  }
+}
+.farm-type-detail{
+  .header-wrap{
+    padding-top: 0.35rem;
+    .light{
+      color: @text-color-light;
+    }
+    .header-bottom{
+      display: flex;
+      margin: 0.62rem 0 0.15rem 0;
+      >div{
+        flex: 1;
+      }
+      div:nth-child(2){
+        text-align: right;
+      }
+    }
+  }
+}

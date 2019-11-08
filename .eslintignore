@@ -1,0 +1,6 @@
+/dist/
+/config/
+/src/libs/*
+/src/util/*
+auto-replace-icon.js
+MY_ICON_URL

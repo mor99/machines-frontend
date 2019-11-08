@@ -1,0 +1,129 @@
+.plan-manage{
+  //padding: 4px 16px;
+  .plan-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    //width: 1511px;
+    height: 1.05rem;
+    border-radius: 4px;
+    background-color: #fff;
+    div{
+      flex: 1;
+      height: 0.6rem;
+      text-align: center;
+      p{
+        font-size: 0.14rem;
+        margin-bottom: 0;
+        line-height: 0.32rem;
+      }
+      h4{
+        font-size: 0.24rem;
+        margin-bottom: 0;
+        line-height: 0.32rem;
+      }
+      ~div{
+        border-left: solid #e9e9e9 1px;
+      }
+    }
+  }
+  .plan-list{
+    margin-top: 0.2rem;
+    padding: 0.2rem 0.28rem;
+    border-radius: 4px;
+    background-color: #fff;
+
+    .head{
+      display: flex;
+      justify-content: space-between;
+      h4{
+        font-size: 0.16rem;
+      }
+    }
+    .add-btn{
+      margin-top: 0.2rem;
+      height: 0.45rem;
+      cursor: pointer;
+      border: dashed 1px #e9e9e9;
+      text-align: center;
+      line-height: 0.45rem;
+      font-size: 0.2rem;
+      color: #999;
+      &:hover{
+        color: #0469e5;
+        border-color: #0469e5;
+      }
+    }
+    .common-container{
+      margin-top: 0.2rem;
+      padding: 0;
+    }
+  }
+}
+
+.common-table-action {
+  margin: auto;
+  max-width: 200px;
+}
+
+.plan-detail {
+  padding: 0.2rem 0.32rem;
+  border-radius: 4px;
+  background-color: #fff;
+
+  .plan-info .head {
+    h4 {
+      display: inline-block;
+      position: relative;
+      font-size: 0.16rem;
+      margin-bottom: 0.2rem;
+      span{
+        position: absolute;
+        right: -1rem;
+        top: -0.08rem;
+        color: rgb(24, 144, 255);
+        font-size: 0.14rem;
+        cursor: pointer;
+      }
+    }
+    p{
+      font-size: 0.14rem;
+      height: 0.48rem;
+      line-height: 0.18rem;
+    }
+  }
+  .plan-list {
+    margin-top: 0.2rem;
+    border-radius: 4px;
+    background-color: #fff;
+
+    .head{
+      border-top: solid 1px #e9e9e9;
+      padding-top: 0.1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .common-container{
+      padding: 0;
+    }
+    .completeRate{
+      margin-top: auto;
+      margin-bottom: auto;
+      display: flex;
+      align-items: center;
+      span:first-child{
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+        &.green{
+          background-color: #07b85f;
+        }
+        &.yellow{
+          background-color: #fa9617;
+        }
+      }
+    }
+  }
+}

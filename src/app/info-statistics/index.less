@@ -1,0 +1,111 @@
+@import '../../assets/css/common.less';
+.info-statistics-wrap {
+  .info-header{
+    border-bottom: 1px solid @border-color;
+    padding-bottom: 0.24rem;
+    font-size: 0.2rem;
+  }
+  .info-select{
+    display: inline-block;
+    margin-left: 0.18rem;
+    .ant-select{
+      width: 2rem;
+    }
+  }
+  .info-other{
+    float: right;
+    .ant-select{
+      width: 2rem;
+    }
+    &-item{
+      // width: 600px;
+      color: rgba(0, 0, 0, 0.75);
+      font-size: 0.14rem;
+      span{
+        padding: 0.03rem 0.07rem;
+        border-radius: 2px;
+        cursor: pointer;
+      }
+      span:not(:last-child){
+        margin-right: 0.12rem;
+      }
+      .active{
+        background-color: #108ee9;
+        color: #fff;
+        margin-right:50px;
+      }
+    }
+  }
+  .info-item {
+    display: flex;
+    margin-bottom: 0.24rem;
+    .no-margin {
+      width: 100%;
+    }
+    .echarts-container {
+      width: 100%;
+      height: 2.2rem;
+    }
+    #farm_type,#farm_kilo,#farm_fault,#farm_fault_num{
+      padding-right: 0.4rem;
+    }
+    #farm_kilo{
+      padding-right: 0.4rem;
+    }
+    .info-part-more {
+      flex: 5;
+      margin-right: 0.84rem;
+      .info-main {
+        display: flex;
+        .info-in {
+          flex: 1;
+        }
+      }
+    }
+    .no-margin{
+      display: flex;
+      .info-in{
+        flex: 1;
+      }
+      .info-in:not(:last-child){
+        margin-right: 0.3rem;
+      }
+    }
+    .info-part {
+      flex: 2;
+      &:not(:last-child){
+        margin-right: 0.3rem;
+      }
+    }
+  }
+  .top-wrap{
+    padding-right: 0.4rem;
+    p{
+      margin-bottom: 0.2rem;
+      width: 100%;
+      color: rgba(0, 0, 0, 0.75);
+      .index{
+        display: inline-block;
+        font-size: 0.12rem;
+        background-color: #f0f2f5;
+        width: 0.18rem;
+        height: 0.18rem;
+        line-height: 0.18rem;
+        text-align: center;
+        border-radius: 50%;
+        color: rgba(0, 0, 0, 0.75);
+        margin-right: 0.26rem;
+      }
+
+      .right{
+        float: right;
+      }
+    }
+    p:nth-child(1),p:nth-child(2),p:nth-child(3) {
+      .index{
+        background-color: #414b61;
+        color: #fff;
+      }
+    }
+  }
+}
