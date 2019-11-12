@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter, } from 'react-router-dom';
-import { message, Modal, Button, Input, } from 'antd';
+import { message, Modal, Button, } from 'antd';
 import moment from 'moment';
 import './index.less';
 import BaseComponent from '../../libs/components/base-component';
@@ -13,7 +13,7 @@ moment.locale('zh-cn');
 
 @withRouter
 export default class PlanManageDetail extends BaseComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       editItem: {},
@@ -23,7 +23,19 @@ export default class PlanManageDetail extends BaseComponent {
     };
   }
 
-  render () {
+  taskStatus = {
+    a_delete: '已删除',
+    b_noExpired: '未过期',
+    c_expired: '已过期',
+    d_postpone: '已延期',
+  }
+
+  machineList = []
+
+
+  machinesCascader = []
+
+  render() {
     const { editItem, editItemPlan, planId, planInfo, } = this.state;
     return (
       <div className='plan-detail'>
@@ -109,18 +121,6 @@ export default class PlanManageDetail extends BaseComponent {
       name: 'name',
       rule: { required: true, },
     },
-    // {
-    //   title: '作业开始时间',
-    //   name: 'workStartTime',
-    //   type: "datePicker",
-    //   rule: {required: true,},
-    // },
-    // {
-    //   title: '作业结束时间',
-    //   name: 'workEndTime',
-    //   type: "datePicker",
-    //   rule: {required: true,},
-    // },
     {
       title: '任务时间',
       name: 'workTime',
@@ -152,14 +152,14 @@ export default class PlanManageDetail extends BaseComponent {
       rule: { required: true, },
     },
     {
-      title: '农机类型',
+      title: '作业类型',
       name: 'farmMachineType',
       type: 'select',
       selectOptions: '/farmMachineType/listAll',
       format: function (data) {
         if (data && data.length > 0) {
           return data.map(z => ({
-            title: z.name,
+            title: `${z.name} / ${z.workType}`,
             value: z.no,
           }));
         } else return [];
@@ -167,8 +167,26 @@ export default class PlanManageDetail extends BaseComponent {
       rule: { required: true, },
     },
     {
+      title: '农机信息',
+      name: 'farmMachineID',
+      type: 'cascader',
+      selectOptions: this.machinesCascader,
+      rule: { required: true, },
+    },
+    {
       title: '任务面积(亩)',
       name: 'workAcreage',
+      rule: {
+        required: true,
+        pattern: {
+          reg: this.$regular.floatNum,
+          message: '请输入正确数字',
+        },
+      },
+    },
+    {
+      title: '任务指标',
+      name: 'workFlow',
       rule: {
         required: true,
         pattern: {
@@ -226,6 +244,25 @@ export default class PlanManageDetail extends BaseComponent {
         },
       },
     },
+    {
+      title: '农机名称',
+      name: 'machineName',
+      otherFormItemParams: {
+        style: {
+          display: 'none',
+        },
+      },
+    },
+    {
+      title: '农机ID',
+      name: 'machineId',
+      otherFormItemParams: {
+        style: {
+          display: 'none',
+        },
+      },
+    },
+
   ];
 
   formItemsPlan = [
@@ -240,10 +277,44 @@ export default class PlanManageDetail extends BaseComponent {
     },
   ];
 
-  componentDidMount () {
+  componentDidMount() {
     this.getDetail();
+    this.getMachineList();
   }
 
+  getMachineList = async () => {
+    this.machineList = await (this.$post('/machine/listByPage', { page: 0, pageSize: 10, total: 19, }));
+
+    this.machineList = this.machineList.data.content;
+    const machineTitles = [];
+    const machineValues = [];
+
+    this.machineList.forEach(machine => {
+      if (machineTitles.indexOf(machine.farmMachineTypeName) === -1) {
+        machineTitles.push(machine.farmMachineTypeName);
+      }
+      if (machineValues.indexOf(machine.farmMachineType) === -1) {
+        machineValues.push(machine.farmMachineType);
+      }
+    });
+    machineTitles.forEach((item, index) => {
+      this.machinesCascader.push({
+        label: item,
+        value: machineValues[index],
+        children: []
+      });
+    });
+    this.machineList.forEach(machine => {
+      for (const key in this.machinesCascader) {
+        if (machine.farmMachineType === this.machinesCascader[key].value) {
+          this.machinesCascader[key].children.push({
+            label: machine.name,
+            value: machine.id
+          })
+        }
+      }
+    });
+  }
   getDetail = async () => {
     const { planId, } = this.state;
     const { code, data, message: msg, } = await this.$get(`plan/details/${planId}`);
@@ -265,6 +336,8 @@ export default class PlanManageDetail extends BaseComponent {
     if (row.workStartTime) {
       row.workTime = [moment(row.workStartTime), moment(row.workEndTime),];
     }
+    row.farmMachineID = [row.farmMachineType, row.machineId]
+
     this.setState({
       editItem: isAdd ? {} : row,
       changeItem: { ...row, isAdd, },
@@ -285,7 +358,7 @@ export default class PlanManageDetail extends BaseComponent {
     this.createTableRef.onSearch();
   }
 
-  formatInputData = (inputVal,) => {
+  formatInputData = (inputVal, ) => {
     // 判断是否选择过地点
     if (!this.form.getFieldValue('latitude')) {
       message.error('请在地图上选择地点！');
@@ -297,6 +370,12 @@ export default class PlanManageDetail extends BaseComponent {
       inputVal.workStartTime = inputVal.workTime[0];
       inputVal.workEndTime = inputVal.workTime[1];
     }
+    this.machineList.forEach(machine => {
+      if (inputVal.farmMachineID[1] === machine.id) {
+        inputVal.machineName = machine.name
+      }
+    })
+    inputVal.machineId = inputVal.farmMachineID[1]
     if (changeItem && changeItem.isAdd) {
       return {
         ...inputVal,
@@ -356,6 +435,11 @@ export default class PlanManageDetail extends BaseComponent {
       key: 'farmMachineTypeName',
     },
     {
+      title: '农机名称',
+      dataIndex: 'machineName',
+      key: 'machineName',
+    },
+    {
       title: '任务类型',
       dataIndex: 'workType',
       key: 'workType',
@@ -366,21 +450,106 @@ export default class PlanManageDetail extends BaseComponent {
       key: 'workAcreage',
     },
     {
+      title: '任务指标',
+      dataIndex: 'workFlow',
+      key: 'workFlow',
+      render: (text, record) => {
+        let content = '';
+        let unit = '';
+        switch (record.farmMachineTypeName) {
+          case '锄草机':
+            content = '锄草:';
+            unit = '次';
+            break;
+          case '开沟机':
+            content = '开沟长度:';
+            unit = 'M';
+            break;
+          case '固体施肥机':
+            content = '施肥量:';
+            unit = 'm³';
+            break;
+          case '定植机':
+            content = '定植数:';
+            unit = '株';
+            break;
+          case '植保机':
+            content = '喷药量:';
+            unit = 'm³';
+            break;
+          case '液体施肥机':
+            content = '喷药量:';
+            unit = 'm³';
+            break;
+          default: break;
+        }
+        return (
+          <span>{content}{text}{unit}</span>
+        );
+      },
+    },
+    {
       title: '作业地点',
       dataIndex: 'workAddress',
       key: 'workAddress',
     },
     {
+      title: '任务状态',
+      dataIndex: 'planTaskStatus',
+      key: 'planTaskStatus',
+      render: (text, ) => {
+        const style = {
+          color: '',
+        };
+        switch (text) {
+          case 'a_delete':
+            style.color = 'red';
+            break;
+          case 'b_noExpired':
+            style.color = 'green';
+            break;
+          case 'c_expired':
+            style.color = 'yellow';
+            break;
+          case 'd_postpone':
+            style.color = 'blue';
+            break;
+          default: break;
+        }
+        return (
+          <div className='completeRate'>
+            <span className={style.color} />
+            <span className='text'>{this.taskStatus[text]}</span>
+          </div>
+        );
+      },
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      render: (time) => (`${moment(time).format('YYYY-MM-DD')}`),
+
+    },
+    {
       title: '完成情况',
       dataIndex: 'completeRate',
       key: 'completeRate',
-      render: (text,) => {
-        const rate = text * 100;
+      render: (text, record) => {
         return (
-          <p className='completeRate'>
-            <span className={rate >= 100 ? 'green' : 'yellow'} />
-            <span className='text'>{rate.toFixed(2)}%</span>
-          </p>
+          <div className='common-table-action'>
+            {
+              this.$generatePowerElements(
+                <span
+                  permission='edit'
+                  onClick={() => {
+                    this.openModal(record, false);
+                  }}
+                >查看
+                </span>
+              )
+            }
+          </div>
         );
       },
     },
