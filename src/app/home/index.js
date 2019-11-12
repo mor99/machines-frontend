@@ -364,6 +364,7 @@ export default class Home extends Component {
         routes = routes.concat(this.createRoute(children));
       }
       if (Component) {
+
         routes = routes.concat(
           <Route
             exact

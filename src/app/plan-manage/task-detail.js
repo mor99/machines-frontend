@@ -7,20 +7,20 @@ import BaseComponent from '../../libs/components/base-component';
 import Map from '../../libs/components/map/line-map';
 
 @withRouter
-export default class WorkDetail extends BaseComponent {
-  constructor(props) {
+export default class TaskDetail extends BaseComponent {
+  constructor (props) {
     super(props);
     this.state = {
       showVedio: false,
       showList: [true, true, true,],
-      id: location.href.split('workDetail/')[1],
+      id: location.href.split('taskDetail/')[1],
       data: {
         itemList: [],
       },
     };
   }
 
-  render() {
+  render () {
     const { showVedio, data, active, status, showList, } = this.state;
     return (
       <div className='work-sum'>
@@ -203,7 +203,7 @@ export default class WorkDetail extends BaseComponent {
     );
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.getDetail();
   }
 
@@ -230,7 +230,7 @@ export default class WorkDetail extends BaseComponent {
 
   getDetail = async () => {
     const { id, } = this.state;
-    const { code, data, message: msg, } = await this.$get(`machineWorkRecord/details/${id}`);
+    const { code, data, message: msg, } = await this.$get(`machineWorkRecordPlanTask/details/${id}`);
     if (code) {
       message.error(msg);
     } else {

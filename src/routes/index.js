@@ -11,6 +11,7 @@ import UserSetting from '../app/system/user-setting'; // 用户设置
 
 import PlanManage from '../app/plan-manage'; // 计划管理
 import PlanDetail from '../app/plan-manage/detail';
+import TaskDetail from '../app/plan-manage/task-detail';
 
 import Monitor from '../app/real-time-monitoring'; // 实时监控
 import MachineDetail from '../app/real-time-monitoring/machine-detail'; // 单机器实时监控
@@ -134,7 +135,19 @@ const Routers = [
             value: 'delete',
             label: '删除',
           },
+          {
+            value: 'detail',
+            label: '详情'
+          }
         ],
+        children: [
+          {
+            path: '/planManage/planManageDetail/taskDetail/:id',
+            title: '任务详情',
+            showMenu: false,
+            component: TaskDetail
+          }
+        ]
       },
     ],
   },

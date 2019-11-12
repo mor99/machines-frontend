@@ -13,7 +13,7 @@ export default class DigitalArchivesDetail extends BaseComponent {
     info: {},
   };
 
-  componentDidMount () {
+  componentDidMount() {
     const { no, } = this.state;
     if (!no) {
       this.setState({
@@ -62,7 +62,7 @@ export default class DigitalArchivesDetail extends BaseComponent {
     };
   }
 
-  render () {
+  render() {
     const { info, no, } = this.state;
     return (
       <div className='common-app digital-archives-detail'>
@@ -213,7 +213,7 @@ export default class DigitalArchivesDetail extends BaseComponent {
         columnsByType.splice(5, 0, extraLiquidFertilizer);
         break;
 
-      default:break;
+      default: break;
     }
     return columnsByType;
   }

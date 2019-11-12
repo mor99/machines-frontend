@@ -24,7 +24,20 @@ class UserInfo {
       runInAction(() => {
         const { power, ...rest } = data;
         this.UserInfo = rest;
-        this.MenuItems = filterMenuFromPowerList(_.cloneDeep(RouterList), JSON.parse(power));
+        const powerJSON = JSON.parse(power)
+        powerJSON[8].actions.push({
+          value:'detail',
+          label:'详情',
+          // checked:powerJSON[8].actions[0].checked
+          checked:true
+        })
+        powerJSON.splice(9,0,{
+          key:'taskDetail',
+          pageName:'任务详情',
+          actions:[]
+        })
+        console.log(powerJSON)
+        this.MenuItems = filterMenuFromPowerList(_.cloneDeep(RouterList), powerJSON);
       });
     }
   };

@@ -541,9 +541,10 @@ export default class PlanManageDetail extends BaseComponent {
             {
               this.$generatePowerElements(
                 <span
-                  permission='edit'
+                  permission='detail'
                   onClick={() => {
-                    this.openModal(record, false);
+                    // this.openModal(record, false);
+                    this.$navGo(`./taskDetail/${record.id}`);
                   }}
                 >查看
                 </span>
