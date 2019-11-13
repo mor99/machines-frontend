@@ -15,7 +15,8 @@ export default class Monitor extends BaseComponent {
   constructor (props) {
     super(props)
     this.state = {
-      query: {}
+      query: {},
+      taskTrack: {}
     }
   }
 
@@ -26,15 +27,20 @@ export default class Monitor extends BaseComponent {
     a_noWork: '离线'
   };
 
+  validTasks = []
+  taskTrack = {}
+
   render () {
     const { query } = this.state
     const { mapMachineList, workStatusNum } = this.props.mapMachine
     const { Option } = Select
+
     return (
       <div className='monitor'>
         <div className='map'>
           <Map
             mapMachineList={mapMachineList}
+            taskTrack={this.state.taskTrack}
           />
         </div>
         <div
@@ -53,12 +59,20 @@ export default class Monitor extends BaseComponent {
               this.changeQuery('keyWord', value, true)
             }}
           />
+          <Select
+            style={{ width: 388 }}
+            placeholder='正在进行的任务'
+            onChange={this.handleTaskChange}
+          >
+
+            {this.validTasks.map((task) => { return (<Option value={task.id} key={task.id}>{task.name}</Option>) })}
+          </Select>
 
           <div className='float-right'>
             <Select
               placeholder='农机类型查询'
               allowClear
-              style={{ width: 140 }}
+              style={{ width: 150 }}
               onChange={this.handleChange}
             >
               <Option value='plantProtectMachine'>植保机</Option>
@@ -124,6 +138,7 @@ export default class Monitor extends BaseComponent {
   componentDidMount () {
     this.getAllMachineList() // 初始渲染并且默认地图点
     this.props.mapMachine.getWorkStatusNum()
+    this.getValidTasks()
   }
 
   getMachineList = () => {
@@ -157,8 +172,8 @@ export default class Monitor extends BaseComponent {
     })
   }
 
-  getValidTasks = () => {
-
+  getValidTasks = async () => {
+    this.validTasks = (await this.$get('planTask/notExpiredPlanTask')).data
   }
 
   // isForce:true强制写入，false相同时清除（再次点击取消条件）
@@ -177,6 +192,25 @@ export default class Monitor extends BaseComponent {
 
   handleChange = (value) => {
     this.changeQuery('farmMachineType', value)
+  }
+
+  handleTaskChange = (e) => {
+    let lat = []
+    let lon = []
+    this.validTasks.forEach(task => {
+      if (e === task.id) {
+        lat = JSON.parse(task.latitude)
+        lon = JSON.parse(task.longitude)
+      }
+    })
+    const nodeList = []
+    lon.forEach((element, index) => {
+      const arr = [element, lat[index]]
+      nodeList.push(arr)
+    })
+    this.setState({
+      taskTrack: nodeList
+    })
   }
 
   //* ******************** */

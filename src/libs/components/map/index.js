@@ -28,7 +28,7 @@ export default class Map extends PureComponent {
     this.loadMap();
   }
   loadMap = async () => {
-    const { mapMachineList, trajectory, } = this.props;
+    const { mapMachineList, trajectory, taskTrack } = this.props;
 
     const url = 'http://222.75.164.172:20005/iserver/services/map-NX_DOM/rest/maps/NX_DOM'
     let origin = {
@@ -62,9 +62,18 @@ export default class Map extends PureComponent {
         projection: 'EPSG:4326'
       });
       this.map.addLayer(layer);
+
     } else {
-      // console.log('update', readMachineData)
+      // console.log('update', readMachineData
+
     }
+
+    // 绘制计划范围
+    const track = taskTrack
+
+    const taskTrackLayer = setTrack(track, 'plan')
+    this.map.addLayer(taskTrackLayer)
+    console.log('s')
 
     // 画点和轨迹 单击的情况
     if (readMachineData.length === 0) {
@@ -122,6 +131,7 @@ export default class Map extends PureComponent {
         // const trackLayer = setTrack(trackOne, workStatus)
         // this.map.addLayer(trackLayer)
       })
+
     }
   }
 }

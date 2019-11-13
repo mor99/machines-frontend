@@ -2,6 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { message } from 'antd'
 import cls from 'classnames'
+import moment from 'moment'
 import './index.less'
 import BaseComponent from '../../libs/components/base-component'
 import Map from '../../libs/components/map/line-map'
@@ -96,7 +97,9 @@ export default class TaskDetail extends BaseComponent {
               {
                 showList[1] &&
                   <div>
-                    <p>任务总作业面积 :  {data.totalWorkAcreage || 0}亩</p>
+                    <p>任务开始时间: {`${moment(data.workStartTime).format('YYYY-MM-DD')}`}</p>
+                    <p>任务结束时间: {`${moment(data.workEndTime).format('YYYY-MM-DD')}`}</p>
+                    <p>任务总作业面积: {data.totalWorkAcreage || 0}亩</p>
                     {data.farmMachineTypeName === '植保机' || data.farmMachineTypeName === '液体施肥机' ? <p>任务总喷药量: {data.totalWorkFlow ? data.totalWorkFlow.toFixed(2) : 0}L</p> : null}
                     {data.farmMachineTypeName === '定植机' ? <p>任务定植量：{data.totalWorkFlow ? data.totalWorkFlow.toFixed(0) : 0}株</p> : null}
                     {data.farmMachineTypeName === '开沟机' ? <p>任务开沟长度：{data.totalWorkFlow ? data.totalWorkFlow.toFixed(2) : 0}M</p> : null}
@@ -171,21 +174,6 @@ export default class TaskDetail extends BaseComponent {
                         )
                       })
                     }
-                    {/* <div className="complete active">
-                   <h4><span>植保作业</span><span>完成</span></h4>
-                   <p>2015-09-01 9:00 ～ 10:20</p>
-                   <h5>w</h5>
-                   </div>
-                   <div className="stop">
-                   <h4><span>植保作业</span><span>故障</span></h4>
-                   <p>2015-09-01 9:00 ～ 10:20</p>
-                   <h5>左臂展开异常</h5>
-                   </div>
-                   <div className="ing">
-                   <h4><span>植保作业</span><span>进行中</span></h4>
-                   <p>2015-09-01 9:00 ～ 10:20</p>
-                   <h5>w</h5>
-                   </div> */}
                   </div>
               }
             </div>
