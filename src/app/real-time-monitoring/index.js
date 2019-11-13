@@ -60,11 +60,11 @@ export default class Monitor extends BaseComponent {
             }}
           />
           <Select
-            style={{ width: 388 }}
+            className='float-right-down'
             placeholder='正在进行的任务'
             onChange={this.handleTaskChange}
+            allowClear
           >
-
             {this.validTasks.map((task) => { return (<Option value={task.id} key={task.id}>{task.name}</Option>) })}
           </Select>
 
@@ -72,7 +72,6 @@ export default class Monitor extends BaseComponent {
             <Select
               placeholder='农机类型查询'
               allowClear
-              style={{ width: 150 }}
               onChange={this.handleChange}
             >
               <Option value='plantProtectMachine'>植保机</Option>
@@ -203,11 +202,15 @@ export default class Monitor extends BaseComponent {
         lon = JSON.parse(task.longitude)
       }
     })
-    const nodeList = []
-    lon.forEach((element, index) => {
-      const arr = [element, lat[index]]
-      nodeList.push(arr)
-    })
+    let nodeList = []
+    if (lat.length !== 0) {
+      lon.forEach((element, index) => {
+        const arr = [element, lat[index]]
+        nodeList.push(arr)
+      })
+    } else {
+      nodeList = [[0, 0], [0, 0]]
+    }
     this.setState({
       taskTrack: nodeList
     })

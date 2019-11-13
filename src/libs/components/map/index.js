@@ -69,11 +69,13 @@ export default class Map extends PureComponent {
     }
 
     // 绘制计划范围
-    const track = taskTrack
-
-    const taskTrackLayer = setTrack(track, 'plan')
-    this.map.addLayer(taskTrackLayer)
-    console.log('s')
+    if(taskTrack.length >= 1) {
+      if (this.map.getLayers().a.length > 1) {
+        this.map.getLayers().a.pop()
+      }
+      const taskTrackLayer = setTrack(taskTrack, 'plan')
+      this.map.addLayer(taskTrackLayer)
+    }
 
     // 画点和轨迹 单击的情况
     if (readMachineData.length === 0) {
@@ -113,7 +115,7 @@ export default class Map extends PureComponent {
       // origin = { lon: 106.21138, lat: 38.507528 }
       // this.map.getView().setCenter([origin.lon, origin.lat])
       if (this.map.getLayers().a.length > 1) {
-        this.map.getLayers().a.length = 1
+        // this.map.getLayers().a.length = 1
       }
 
       const activeMachines = readMachineData.filter(item => item.workStatus !== 'a_noWork')

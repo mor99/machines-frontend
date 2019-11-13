@@ -15,6 +15,8 @@ const colors = {
   complete: "#3faeee",
   ing: "#1ebf6e",
   stop: "#fa9617",
+  error:"#fa9617",
+  plan:""
 }
 
 export function setMarker(longitude, latitude, workStatus, type) {
@@ -103,8 +105,15 @@ export function setTrack(trackOne, workStatus) {
     style: new ol.style.Style({
       stroke: new ol.style.Stroke({
         color: trackColor,
-        width: 3
+        width: workStatus === 'plan' ? 6 : 3
       })
+    }),
+    text: new ol.style.Text({
+      font:'13px Microsoft YaHei',
+      text:'11',
+      fill: new ol.style.Fill({
+        color: '#666'
+    })
     })
   });
   return roadLineLayer
