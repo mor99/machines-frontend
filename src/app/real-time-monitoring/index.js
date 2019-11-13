@@ -1,11 +1,11 @@
-import React from 'react';
-import { withRouter, } from 'react-router-dom';
-import { Input, message, Select, Icon, Row, Col, } from 'antd';
-import { inject, observer, } from 'mobx-react';
+import React from 'react'
+import { withRouter } from 'react-router-dom'
+import { Input, message, Select, Icon, Row, Col } from 'antd'
+import { inject, observer } from 'mobx-react'
 // import MyIcon from "../../libs/components/icon/index";
-import './index.less';
-import BaseComponent from '../../libs/components/base-component';
-import Map from '../../libs/components/map';
+import './index.less'
+import BaseComponent from '../../libs/components/base-component'
+import Map from '../../libs/components/map'
 
 @withRouter
 @inject('mapMachine')
@@ -13,23 +13,23 @@ import Map from '../../libs/components/map';
 
 export default class Monitor extends BaseComponent {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
-      query: {},
-    };
+      query: {}
+    }
   }
 
   workStatus = {
     c_working: '作业中',
     d_fault: '故障',
     b_completed: '待机中',
-    a_noWork: '离线',
+    a_noWork: '离线'
   };
 
   render () {
-    const { query, } = this.state;
-    const { mapMachineList, workStatusNum, } = this.props.mapMachine;
-    const { Option, } = Select;
+    const { query } = this.state
+    const { mapMachineList, workStatusNum } = this.props.mapMachine
+    const { Option } = Select
     return (
       <div className='monitor'>
         <div className='map'>
@@ -40,7 +40,7 @@ export default class Monitor extends BaseComponent {
         <div
           className='status-btn'
           onClick={() => {
-            this.$navGo('./statusWatch');
+            this.$navGo('./statusWatch')
           }}
         >
           <span><Icon type='sync' /></span>
@@ -50,45 +50,25 @@ export default class Monitor extends BaseComponent {
           <Input.Search
             placeholder='通过农机名称、编号、型号筛选农机'
             onSearch={value => {
-              this.changeQuery('keyWord', value, true);
+              this.changeQuery('keyWord', value, true)
             }}
           />
 
-          <Row gutter={12} style={{ marginTop: 12, }} justify='space-between'>
-            <Col span={12}>
-              <Select
-                className='float-right1'
-                placeholder='农机类型查询'
-                allowClear
-                style={{ width: 190, }}
-                onChange={this.handleChange}
-              >
-                <Option value='plantProtectMachine'>植保机</Option>
-                <Option value='liquidFertilizerMachine'>液体施肥机</Option>
-                <Option value='plantMachine'>定植机</Option>
-                <Option value='solidFertilizerMachine'>固体施肥机</Option>
-                <Option value='mowerMachine'>除草机</Option>
-                <Option value='ditchMachine'>开沟机</Option>
-              </Select>
-            </Col>
-            {/* </Row>
-          <Row gutter={24} style={{ marginTop: 12, }} justify='space-between'> */}
-
-            <Col span={12}>
-              <Select
-                className='float-right1'
-                placeholder='当前进行计划'
-                allowClear
-                style={{ width: 190, }}
-              >
-                <Option value='plantProtectMachine'>2019年秋季定植作业计划</Option>
-                <Option value='liquidFertilizerMachine'>2019年秋季开沟作业计划</Option>
-                <Option value='plantMachine'>2019年秋季锄草作业计划</Option>
-                <Option value='solidFertilizerMachine'>2019年秋季施肥作业计划</Option>
-                <Option value='mowerMachine'>2019年秋季植保作业计划</Option>
-              </Select>
-            </Col>
-          </Row>
+          <div className='float-right'>
+            <Select
+              placeholder='农机类型查询'
+              allowClear
+              style={{ width: 140 }}
+              onChange={this.handleChange}
+            >
+              <Option value='plantProtectMachine'>植保机</Option>
+              <Option value='liquidFertilizerMachine'>液体施肥机</Option>
+              <Option value='plantMachine'>定植机</Option>
+              <Option value='solidFertilizerMachine'>固体施肥机</Option>
+              <Option value='mowerMachine'>除草机</Option>
+              <Option value='ditchMachine'>开沟机</Option>
+            </Select>
+          </div>
 
           <div className='list'>
             <div className='list-head'>
@@ -103,7 +83,7 @@ export default class Monitor extends BaseComponent {
                       key={key}
                       className={query.workStatus === key ? 'active' : ''}
                       onClick={() => {
-                        this.changeQuery('workStatus', key);
+                        this.changeQuery('workStatus', key)
                       }}
                     >
                       <p>{this.workStatus[key]}(台)</p>
@@ -119,7 +99,7 @@ export default class Monitor extends BaseComponent {
                   <div
                     key={z.no}
                     onClick={() => {
-                      this.$navGo(`./monitor/machineDetail/${z.id}`);
+                      this.$navGo(`./monitor/machineDetail/${z.id}`)
                     }}
                   >
                     <h4>
@@ -138,61 +118,65 @@ export default class Monitor extends BaseComponent {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   componentDidMount () {
-    this.getAllMachineList(); // 初始渲染并且默认地图点
-    this.props.mapMachine.getWorkStatusNum();
+    this.getAllMachineList() // 初始渲染并且默认地图点
+    this.props.mapMachine.getWorkStatusNum()
   }
 
   getMachineList = () => {
-    const { query, } = this.state;
+    const { query } = this.state
     this.$post('machine/listByPage', {
       page: 0,
       pageSize: 9999,
       isWorkStatusSort: true,
-      ...query,
-    }).then(({ code, data, message: msg, }) => {
+      ...query
+    }).then(({ code, data, message: msg }) => {
       if (code) {
-        message.error(msg);
+        message.error(msg)
       } else if (data && data.content) {
-        this.props.mapMachine.setMapMachineList(data.content);
+        this.props.mapMachine.setMapMachineList(data.content)
       }
-    });
+    })
   }
 
   getAllMachineList = () => {
-    const { mapMachine, } = this.props;
+    const { mapMachine } = this.props
     this.$post('machine/listByPage', {
       page: 0,
       pageSize: 9999,
-      isWorkStatusSort: true,
-    }).then(({ code, data, message: msg, }) => {
+      isWorkStatusSort: true
+    }).then(({ code, data, message: msg }) => {
       if (code) {
-        message.error(msg);
+        message.error(msg)
       } else {
-        if (data) mapMachine.setMapMachineList(data.content);
+        if (data) mapMachine.setMapMachineList(data.content)
       }
-    });
+    })
+  }
+
+  getValidTasks = () => {
+
   }
 
   // isForce:true强制写入，false相同时清除（再次点击取消条件）
   changeQuery = (name, val, isForce = false) => {
-    const { query, } = this.state;
-    let res = val;
+    const { query } = this.state
+    let res = val
     if (query[name] === val) {
-      res = null;
+      res = null
     }
     this.setState({
       query: Object.assign({}, query, {
-        [name]: isForce ? val : res,
-      }),
-    }, this.getMachineList);
+        [name]: isForce ? val : res
+      })
+    }, this.getMachineList)
   }
 
   handleChange = (value) => {
-    this.changeQuery('farmMachineType', value);
+    this.changeQuery('farmMachineType', value)
   }
 
   //* ******************** */

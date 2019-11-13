@@ -18,7 +18,7 @@ exports.IP = (() => {
   }
 })()
 
-exports.IP = '192.168.2.110'
+exports.IP = '192.168.1.107'
 
 exports.theme = (() => {
   let theme = {}

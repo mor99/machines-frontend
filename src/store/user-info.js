@@ -28,7 +28,6 @@ class UserInfo {
         powerJSON[8].actions.push({
           value:'detail',
           label:'详情',
-          // checked:powerJSON[8].actions[0].checked
           checked:true
         })
         powerJSON.splice(9,0,{
@@ -36,7 +35,6 @@ class UserInfo {
           pageName:'任务详情',
           actions:[]
         })
-        console.log(powerJSON)
         this.MenuItems = filterMenuFromPowerList(_.cloneDeep(RouterList), powerJSON);
       });
     }
