@@ -1,16 +1,16 @@
-import React, { Component, } from 'react';
-import { withRouter, } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import md5 from 'md5';
-import { Form, Input, Spin, message, Icon, Button, } from 'antd';
-import { HOST_API, } from '../../libs/api/index';
-import Config from '../../config';
-import { loginAccount, loginImgCode, } from '../../util/regular';
-import logoImg from '../../assets/img/loginLogo.png';
-import UserInfo from '../../store/user-info';
-import './index.less';
+import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import md5 from 'md5'
+import { Form, Input, Spin, message, Icon, Button } from 'antd'
+import { HOST_API } from '../../libs/api/index'
+import Config from '../../config'
+import { loginAccount, loginImgCode } from '../../util/regular'
+import logoImg from '../../assets/img/loginLogo.png'
+import UserInfo from '../../store/user-info'
+import './index.less'
 
-const { CopyRight, SystemName, TechHelp, } = Config;
+const { CopyRight, SystemName, TechHelp } = Config
 
 @Form.create()
 @withRouter
@@ -23,7 +23,7 @@ export default class Login extends Component {
     random: (new Date()).getTime(),
     loading: false,
     pwdShow: false,
-    focusItem: '',
+    focusItem: ''
   };
 
   messageAntd = message
@@ -32,35 +32,35 @@ export default class Login extends Component {
     loginName: [
       {
         required: true,
-        message: '请输入用户名',
+        message: '请输入用户名'
       },
       {
         pattern: loginAccount,
-        message: '请输入正确的用户名',
-      },
+        message: '请输入正确的用户名'
+      }
     ],
     password: [
       {
         required: true,
-        message: '请输入密码',
-      },
+        message: '请输入密码'
+      }
     ],
     imgVerifyCode: [
       {
         required: true,
-        message: '请输入验证码',
+        message: '请输入验证码'
       },
       {
         pattern: loginImgCode,
-        message: '请输入正确的验证码',
-      },
-    ],
+        message: '请输入正确的验证码'
+      }
+    ]
   }
 
   render () {
-    const { loading, pwdShow, focusItem, random, } = this.state;
-    const { form, } = this.props;
-    const { getFieldDecorator, } = form;
+    const { loading, pwdShow, focusItem, random } = this.state
+    const { form } = this.props
+    const { getFieldDecorator } = form
     return (
       <div className='bg login-page'>
         <div className='login-box'>
@@ -77,12 +77,12 @@ export default class Login extends Component {
             >
               <Form.Item className='account-item'>
                 {getFieldDecorator('loginName', {
-                  rules: this.rules.loginName,
+                  rules: this.rules.loginName
                 })(
                   <Input
                     prefix={<Icon type='user' />}
-                    onFocus={() => this.setState({ focusItem: 'loginName', })}
-                    onBlur={() => this.setState({ focusItem: '', })}
+                    onFocus={() => this.setState({ focusItem: 'loginName' })}
+                    onBlur={() => this.setState({ focusItem: '' })}
                     autoComplete='off'
                     placeholder='请输入用户名'
                   />
@@ -90,7 +90,7 @@ export default class Login extends Component {
               </Form.Item>
               <Form.Item className='password-item'>
                 {getFieldDecorator('password', {
-                  rules: this.rules.password,
+                  rules: this.rules.password
                 })(
                   <Input
                     prefix={<Icon type='lock' />}
@@ -100,8 +100,8 @@ export default class Login extends Component {
                         type={`${pwdShow ? 'lock' : 'eye'}`}
                       />
                     }
-                    onFocus={() => this.setState({ focusItem: 'password', })}
-                    onBlur={() => this.setState({ focusItem: '', })}
+                    onFocus={() => this.setState({ focusItem: 'password' })}
+                    onBlur={() => this.setState({ focusItem: '' })}
                     autoComplete='off'
                     placeholder='请输入密码'
                     type={!pwdShow ? 'password' : 'text'}
@@ -110,7 +110,7 @@ export default class Login extends Component {
               </Form.Item>
               <Form.Item className='imgCode-item'>
                 {getFieldDecorator('imgVerifyCode', {
-                  rules: this.rules.imgVerifyCode,
+                  rules: this.rules.imgVerifyCode
                 })(
                   <Input
                     prefix={<Icon type='message' />}
@@ -121,8 +121,8 @@ export default class Login extends Component {
                         className='img-code'
                       />
                     }
-                    onFocus={() => this.setState({ focusItem: 'imgVerifyCode', })}
-                    onBlur={() => this.setState({ focusItem: '', })}
+                    onFocus={() => this.setState({ focusItem: 'imgVerifyCode' })}
+                    onBlur={() => this.setState({ focusItem: '' })}
                     autoComplete='off'
                     placeholder='请输入验证码'
                     type='text'
@@ -152,13 +152,13 @@ export default class Login extends Component {
 
         </div>
       </div>
-    );
+    )
   }
 
   updateImg = () => {
     this.setState({
-      random: new Date().getTime(),
-    });
+      random: new Date().getTime()
+    })
   }
 
   /**
@@ -167,19 +167,19 @@ export default class Login extends Component {
    * @returns {Promise<void>}
    */
   submit = async (e) => {
-    e.preventDefault();
-    const { form, } = this.props;
+    e.preventDefault()
+    const { form } = this.props
     form.validateFields((err, val) => {
       if (!err) {
         this.setState({
-          loading: true,
-        }, () => { this.login(val); });
-        return;
+          loading: true
+        }, () => { this.login(val) })
+        return
       }
       if (err.loginName) {
-        this.messageAntd.error('请输入正确的用户名');
+        this.messageAntd.error('请输入正确的用户名')
       }
-    });
+    })
   };
 
   /**
@@ -188,40 +188,40 @@ export default class Login extends Component {
    * @returns {Promise<void>}
    */
   login = async (params) => {
-    const { history, form, } = this.props;
-    const { random, } = this.state;
-    const url = 'sysUser/login';
-    params.password = md5(md5(params.password));
-    params.imgVerifyCodeUuid = random;
-    const { code, data, message, } = await Post(url, { ...params, source: 'Pc', });
+    const { history, form } = this.props
+    const { random } = this.state
+    const url = 'sysUser/login'
+    params.password = md5(md5(params.password))
+    params.imgVerifyCodeUuid = random
+    const { code, data, message } = await Post(url, { ...params, source: 'Pc' })
     this.setState({
-      loading: false,
-    });
+      loading: false
+    })
     try {
       if (code) {
-        this.messageAntd.error(message);
+        this.messageAntd.error(message)
         form.setFieldsValue({
-          imgVerifyCode: '',
-        });
-        this.updateImg();
+          imgVerifyCode: ''
+        })
+        this.updateImg()
       } else {
-        const token = data;
+        const token = data
         if (!token.length) {
-          this.messageAntd.error('登录失败');
+          this.messageAntd.error('登录失败')
           form.setFieldsValue({
-            imgVerifyCode: '',
-          });
-          this.updateImg();
-          return;
+            imgVerifyCode: ''
+          })
+          this.updateImg()
+          return
         }
-        Cookies.set('SystemToken', token, { expires: 7, });
-        UserInfo.updateUserInfo();
+        Cookies.set('SystemToken', token, { expires: 7 })
+        UserInfo.updateUserInfo()
         history.push({
-          pathname: '/monitor',
-        });
+          pathname: '/monitor'
+        })
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
   };
 
@@ -229,9 +229,9 @@ export default class Login extends Component {
    * 切换密码显示
    */
   toggleShowPwd = () => {
-    const { pwdShow, } = this.state;
+    const { pwdShow } = this.state
     this.setState({
-      pwdShow: !pwdShow,
-    });
+      pwdShow: !pwdShow
+    })
   }
 }

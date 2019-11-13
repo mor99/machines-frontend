@@ -1,24 +1,24 @@
-import React from 'react';
-import { Form, Input, Button, } from 'antd';
-import { withRouter, } from 'react-router-dom';
-import md5 from 'md5';
-import Cookies from 'js-cookie';
+import React from 'react'
+import { Form, Input, Button } from 'antd'
+import { withRouter } from 'react-router-dom'
+import md5 from 'md5'
+import Cookies from 'js-cookie'
 // import { inject, observer, } from 'mobx-react';
-import BaseComponent from '../../../libs/components/base-component';
-import Upload from '../../../libs/components/upload';
-import UserInfo from '../../../store/user-info';
-import './index.less';
+import BaseComponent from '../../../libs/components/base-component'
+import Upload from '../../../libs/components/upload'
+import UserInfo from '../../../store/user-info'
+import './index.less'
 
 const formItemLayout = {
   labelCol: {
-    xs: { span: 24, },
-    sm: { span: 9, },
+    xs: { span: 24 },
+    sm: { span: 9 }
   },
   wrapperCol: {
-    xs: { span: 24, },
-    sm: { span: 15, },
-  },
-};
+    xs: { span: 24 },
+    sm: { span: 15 }
+  }
+}
 
 @Form.create()
 @withRouter
@@ -28,66 +28,66 @@ const formItemLayout = {
 export default class UserSetting extends BaseComponent {
   state = {
     loading: false,
-    info: UserInfo.UserInfo,
+    info: UserInfo.UserInfo
   }
 
   compareToFirstPassword = (rule, value, callback) => {
-    const { form, } = this.props;
+    const { form } = this.props
     if (value && value !== form.getFieldValue('newPassword')) {
-      callback('前后密码不一致！');
+      callback('前后密码不一致！')
     } else {
-      callback();
+      callback()
     }
   }
 
   compareToConirmPassword= (rule, value, callback) => {
-    const { form, } = this.props;
-    form.validateFields(['newPassword1',], { force: true, });
-    callback();
+    const { form } = this.props
+    form.validateFields(['newPassword1'], { force: true })
+    callback()
   }
 
   submitForm = () => {
-    const { form, } = this.props;
+    const { form } = this.props
     form.validateFields((err, value) => {
       if (!err) {
         this.setState({
-          loading: true,
+          loading: true
         }, () => {
-          this.submit(value);
-        });
+          this.submit(value)
+        })
       }
-    });
+    })
   }
 
   submit = async (value) => {
-    const url = 'sysUser/updatePassword';
-    const params = {};
+    const url = 'sysUser/updatePassword'
+    const params = {}
     for (const i in value) {
-      params[i] = md5(md5(value[i]));
+      params[i] = md5(md5(value[i]))
     }
-    const { code, message, } = await this.$post(url, params);
+    const { code, message } = await this.$post(url, params)
     if (code) {
-      this.$error(message);
+      this.$error(message)
       this.setState({
-        loading: false,
-      });
+        loading: false
+      })
     } else {
       this.$success(message, () => {
-        Cookies.remove('SystemToken');
-        sessionStorage.clear();
-        this.$navGo('/login');
-      });
+        Cookies.remove('SystemToken')
+        sessionStorage.clear()
+        this.$navGo('/login')
+      })
     }
   }
 
   resetForm = () => {
-    const { form, } = this.props;
-    form.resetFields();
+    const { form } = this.props
+    form.resetFields()
   }
 
   render () {
-    const { loading, info, showUp, fileList = [], } = this.state;
-    const { form: { getFieldDecorator, }, } = this.props;
+    const { loading, info, showUp, fileList = [] } = this.state
+    const { form: { getFieldDecorator } } = this.props
     return (
       <div className='common-app user-setting-wrap'>
         <div className='header-wrap'>
@@ -105,8 +105,8 @@ export default class UserSetting extends BaseComponent {
                 className='header-img'
                 onClick={() => {
                   this.setState({
-                    showUp: !showUp,
-                  });
+                    showUp: !showUp
+                  })
                 }}
               >
                 {
@@ -115,7 +115,7 @@ export default class UserSetting extends BaseComponent {
                       style={{
                         backgroundImage: `url(${UserInfo.UserInfo.headImgUrl})`,
                         backgroundSize: 'cover',
-                        height: '100%',
+                        height: '100%'
                       }}
                       />
                     : info.name ? info.name.slice(-2) : '-'
@@ -124,23 +124,23 @@ export default class UserSetting extends BaseComponent {
               <p>{this.$helpers.formatValue(info.name)}</p>
               {
                 showUp &&
-                <div className='upload'>
-                  <p>上传文件：</p>
-                  <Upload
-                    fileList={fileList}
-                    otherParams={{
-                      maxNumber: 1,
-                    }}
-                    onChange={async (e) => {
+                  <div className='upload'>
+                    <p>上传文件：</p>
+                    <Upload
+                      fileList={fileList}
+                      otherParams={{
+                      maxNumber: 1
+                      }}
+                      onChange={async (e) => {
                       this.setState({
                         fileList: e,
-                        showUp: false,
-                      });
-                      await this.$get(`sysUser/updateHeadImgId/${e[0].id}`);
-                      UserInfo.updateUserInfo();
-                    }}
-                  />
-                </div>
+                        showUp: false
+                      })
+                      await this.$get(`sysUser/updateHeadImgId/${e[0].id}`)
+                      UserInfo.updateUserInfo()
+                      }}
+                    />
+                  </div>
               }
             </div>
             <div className='header-text'>
@@ -169,9 +169,9 @@ export default class UserSetting extends BaseComponent {
                   rules: [
                     {
                       required: true,
-                      message: '请输入当前密码',
-                    },
-                  ],
+                      message: '请输入当前密码'
+                    }
+                  ]
                 })(
                   <Input
                     placeholder='请输入当前密码'
@@ -189,16 +189,16 @@ export default class UserSetting extends BaseComponent {
                   rules: [
                     {
                       required: true,
-                      message: '请输入新密码',
+                      message: '请输入新密码'
                     },
                     {
                       pattern: this.$regular.password,
-                      message: '支持英文，数字，下划线，6-18个字符',
+                      message: '支持英文，数字，下划线，6-18个字符'
                     },
                     {
-                      validator: this.compareToConirmPassword,
-                    },
-                  ],
+                      validator: this.compareToConirmPassword
+                    }
+                  ]
                 })(
                   <Input
                     placeholder='请输入新密码'
@@ -216,12 +216,12 @@ export default class UserSetting extends BaseComponent {
                   rules: [
                     {
                       required: true,
-                      message: '请确认密码',
+                      message: '请确认密码'
                     },
                     {
-                      validator: this.compareToFirstPassword,
-                    },
-                  ],
+                      validator: this.compareToFirstPassword
+                    }
+                  ]
                 })(
                   <Input
                     placeholder='请输入新密码'
@@ -247,6 +247,6 @@ export default class UserSetting extends BaseComponent {
           </Form>
         </div>
       </div>
-    );
+    )
   }
 }

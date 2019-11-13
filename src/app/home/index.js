@@ -1,110 +1,110 @@
-import React, { Component, } from 'react';
-import { Layout, Menu, Breadcrumb, Icon, Dropdown, } from 'antd';
-import { Provider, observer, } from 'mobx-react';
-import { withRouter, Link, Switch, Route, } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import React, { Component } from 'react'
+import { Layout, Menu, Breadcrumb, Icon, Dropdown } from 'antd'
+import { Provider, observer } from 'mobx-react'
+import { withRouter, Link, Switch, Route } from 'react-router-dom'
+import Cookies from 'js-cookie'
 // import Icon from "../../libs/components/icon/index";
-import UserInfo from '../../store/user-info';
-import mapMachine from '../../store/socket';
-import Config from '../../config';
-import './home.less';
-import { BasePage, } from '../../libs/components/base-page/base-page';
+import UserInfo from '../../store/user-info'
+import mapMachine from '../../store/socket'
+import Config from '../../config'
+import './home.less'
+import { BasePage } from '../../libs/components/base-page/base-page'
 
-let Crumb = [];
+let Crumb = []
 
 @withRouter
 @observer
 export default class Home extends Component {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
       topSelected: [],
       openKey: [],
       selectKey: [],
 
-      crumb: [],
-    };
+      crumb: []
+    }
   }
 
   static formatMenu (items = []) {
-    const { powerList, } = UserInfo;
-    return items.filter((z,) => {
+    const { powerList } = UserInfo
+    return items.filter((z) => {
       if (powerList.find(j => j.key === z.key)) {
-        z.children = Home.formatMenu(z.children);
-        return true;
+        z.children = Home.formatMenu(z.children)
+        return true
       }
-      return false;
-    });
+      return false
+    })
   }
 
   static findItem (items = [], pathArr, index, max) {
     items.forEach(z => {
-      const x = z.key === pathArr[index];
+      const x = z.key === pathArr[index]
       if (x && index < max) {
-        Crumb.push(z);
-        Home.findItem(z.children, pathArr, ++index, max);
+        Crumb.push(z)
+        Home.findItem(z.children, pathArr, ++index, max)
       }
-    });
+    })
   }
 
   static getDerivedStateFromProps (newProps, newState) {
-    const currentPath = _.get(newProps, ['location', 'pathname', ]);
-    const pathArr = currentPath.replace(/\//, '').replace(/\/\d+/g, '').split('/');
-    Crumb = [];
+    const currentPath = _.get(newProps, ['location', 'pathname'])
+    const pathArr = currentPath.replace(/\//, '').replace(/\/\d+/g, '').split('/')
+    Crumb = []
     if (!UserInfo.MenuItems.length) {
-      return null;
+      return null
     }
-    Home.findItem(UserInfo.MenuItems, pathArr, 0, pathArr.length);
-    const Items = Crumb.filter(z => z.showMenu !== false);
-    let topSelected = []; let openKey = []; let selectKey = [];
+    Home.findItem(UserInfo.MenuItems, pathArr, 0, pathArr.length)
+    const Items = Crumb.filter(z => z.showMenu !== false)
+    let topSelected = []; let openKey = []; let selectKey = []
     if (Config.Layout.ShowFirstLevelAtTop) {
       if (pathArr[0] && Items.length) {
-        topSelected = [pathArr[0], ]; // 取url地址第一个
-        selectKey = Items[Items.length - 1] ? [Items[Items.length - 1].key, ] : [];
+        topSelected = [pathArr[0]] // 取url地址第一个
+        selectKey = Items[Items.length - 1] ? [Items[Items.length - 1].key] : []
         if (newState.spread) {
-          openKey = Items.filter(z => z.key !== selectKey[0] || z.key !== topSelected[0]).map(z => z.key);
+          openKey = Items.filter(z => z.key !== selectKey[0] || z.key !== topSelected[0]).map(z => z.key)
         }
       }
     } else {
-      selectKey = Items[Items.length - 1] ? [Items[Items.length - 1].key, ] : [];
+      selectKey = Items[Items.length - 1] ? [Items[Items.length - 1].key] : []
       if (newState.spread) {
-        openKey = Items.filter(z => z.key !== selectKey[0]).map(z => z.key);
+        openKey = Items.filter(z => z.key !== selectKey[0]).map(z => z.key)
       }
     }
     const defaultParams = {
       topSelected,
       openKey: newState.spread ? openKey : newState.openKey,
       spread: false,
-      selectKey,
-    };
+      selectKey
+    }
     return {
       crumb: Crumb,
-      ...defaultParams,
-    };
+      ...defaultParams
+    }
   }
 
   componentDidMount () {
     this.setState({ // 刷新或者点击顶部切换 默认展开
-      spread: true,
-    });
+      spread: true
+    })
   }
 
   signOut = () => {
-    const { history, } = this.props;
-    Cookies.remove('SystemToken');
-    sessionStorage.clear();
+    const { history } = this.props
+    Cookies.remove('SystemToken')
+    sessionStorage.clear()
     history.push({
-      pathname: '/login',
-    });
+      pathname: '/login'
+    })
   };
 
-  topMenuClick = ({ key, }) => {
+  topMenuClick = ({ key }) => {
     switch (key) {
       case 'signOut':
-        this.signOut();
-        break;
+        this.signOut()
+        break
       default:
-        console.warn(key);
+        console.warn(key)
     }
   };
 
@@ -117,7 +117,7 @@ export default class Home extends Component {
   );
 
   renderTopMenu = () => {
-    const { topSelected, } = this.state;
+    const { topSelected } = this.state
     if (Config.Layout.ShowFirstLevelAtTop) {
       return (
         <Menu
@@ -128,7 +128,7 @@ export default class Home extends Component {
         >
           {
             UserInfo.MenuItems.map(z => {
-              const isImg = /\.[png|jpg|jpeg]/i.test(z.icon);
+              const isImg = /\.[png|jpg|jpeg]/i.test(z.icon)
               return (
                 <Menu.Item key={z.key}>
                   {
@@ -136,33 +136,33 @@ export default class Home extends Component {
                   }
                   <p>{z.title}</p>
                 </Menu.Item>
-              );
+              )
             })
           }
         </Menu>
-      );
+      )
     } else {
-      return <div />;
+      return <div />
     }
   };
 
   renderLeftMenu = () => {
-    const { topSelected, } = this.state;
+    const { topSelected } = this.state
     if (Config.Layout.ShowFirstLevelAtTop && topSelected.length) {
-      const leftMenu = UserInfo.MenuItems.find(z => topSelected.indexOf(z.key) > -1);
-      return this.renderMenuItem(leftMenu.children);
+      const leftMenu = UserInfo.MenuItems.find(z => topSelected.indexOf(z.key) > -1)
+      return this.renderMenuItem(leftMenu.children)
     } else {
-      return this.renderMenuItem(UserInfo.MenuItems);
+      return this.renderMenuItem(UserInfo.MenuItems)
     }
   };
 
   renderMenuItem = (items) => {
     return items.map(z => {
       if (!z.showMenu) {
-        return null;
+        return null
       }
       if (z.children && z.children.length && z.children.filter(z => z.showMenu !== false).length) {
-        const isImg = /\.[png|jpg|jpeg]/i.test(z.icon);
+        const isImg = /\.[png|jpg|jpeg]/i.test(z.icon)
         return (
           <Menu.SubMenu
             key={z.key}
@@ -179,9 +179,9 @@ export default class Home extends Component {
               this.renderMenuItem(z.children)
             }
           </Menu.SubMenu>
-        );
+        )
       } else {
-        const isImg = /\.[png|jpg|jpeg]/i.test(z.icon);
+        const isImg = /\.[png|jpg|jpeg]/i.test(z.icon)
         return (
           <Menu.Item
             key={z.key}
@@ -195,15 +195,15 @@ export default class Home extends Component {
               </span>
             </Link>
           </Menu.Item>
-        );
+        )
       }
-    });
+    })
   }
 
   render () {
-    const { openKey, selectKey, crumb, } = this.state;
+    const { openKey, selectKey, crumb } = this.state
     if (!UserInfo.MenuItems.length) {
-      return null;
+      return null
     }
     return (
       <Provider
@@ -223,8 +223,8 @@ export default class Home extends Component {
               <span
                 className='img-wrap'
                 onClick={() => {
-                  const { history, } = this.props;
-                  history.push('/systemSetting/userSetting');
+                  const { history } = this.props
+                  history.push('/systemSetting/userSetting')
                 }}
               >
                 {
@@ -233,9 +233,9 @@ export default class Home extends Component {
                       style={{
                         backgroundImage: `url(${UserInfo.UserInfo.headImgUrl})`,
                         backgroundSize: 'cover',
-                        height: '100%',
+                        height: '100%'
                       }}
-                    />
+                      />
                     : UserInfo.UserInfo.name ? UserInfo.UserInfo.name.slice(-2) : ''
                 }
               </span>
@@ -259,7 +259,7 @@ export default class Home extends Component {
                 selectedKeys={selectKey}
                 defaultOpenKeys={openKey}
                 onSelect={this.selectLeftMenu}
-                style={{ height: '100%', borderRight: 0, }}
+                style={{ height: '100%', borderRight: 0 }}
                 theme='dark'
               >
                 {
@@ -268,7 +268,7 @@ export default class Home extends Component {
               </Menu>
             </Layout.Sider>
             <Layout className={`layout-right-content-box ${Config.Layout.ShadowMode ? 'layout-right-content-box-shadow' : ''}`}>
-              <Breadcrumb style={{ margin: '16px 0', }}>
+              <Breadcrumb style={{ margin: '16px 0' }}>
                 {
                   crumb.map((z, i) => {
                     return (
@@ -278,7 +278,7 @@ export default class Home extends Component {
                           // z.title
                         }
                       </Breadcrumb.Item>
-                    );
+                    )
                   })
                 }
               </Breadcrumb>
@@ -297,18 +297,18 @@ export default class Home extends Component {
           </Layout>
         </Layout>
       </Provider>
-    );
+    )
   }
 
   /*
   * 跳转特殊URL
   * */
   setUrl = (path) => {
-    const url = path.split('digitalArchivesDetail/:id');
+    const url = path.split('digitalArchivesDetail/:id')
     if (url.length > 1) {
-      return `${url[0]}digitalArchivesDetail/${sessionStorage.digitalArchivesDetail}`;
+      return `${url[0]}digitalArchivesDetail/${sessionStorage.digitalArchivesDetail}`
     }
-    return path;
+    return path
   }
 
   /**
@@ -316,22 +316,22 @@ export default class Home extends Component {
    * @returns {*}
    */
   selectLeftMenu = (item) => {
-    const selectKey = [item.key, ];
+    const selectKey = [item.key]
     this.setState({
-      selectKey,
-    });
+      selectKey
+    })
   };
 
   selectTopMenu = (item) => {
-    const { history, } = this.props;
-    const location = UserInfo.MenuItems.find(z => z.key === item.key);
-    const path = this.gitItemFirstPage(location);
+    const { history } = this.props
+    const location = UserInfo.MenuItems.find(z => z.key === item.key)
+    const path = this.gitItemFirstPage(location)
     this.setState({
-      spread: true,
-    });
+      spread: true
+    })
     history.push({
-      pathname: path,
-    });
+      pathname: path
+    })
   };
 
   /**
@@ -339,32 +339,31 @@ export default class Home extends Component {
    * @param current
    */
   gitItemFirstPage = (current) => {
-    let path = '';
+    let path = ''
     function getLastPath (item) {
-      const children = item.children;
+      const children = item.children
       if (children && children.length) {
-        const find = children.find(z => z.showMenu);
+        const find = children.find(z => z.showMenu)
         if (find) {
-          getLastPath(find);
+          getLastPath(find)
         } else {
-          path = item.path;
+          path = item.path
         }
       } else {
-        path = item.path;
+        path = item.path
       }
     }
-    getLastPath(current);
-    return path;
+    getLastPath(current)
+    return path
   };
 
   createRoute = (routes) => {
-    return routes.map(({ path, component: Component, children, key, actions, }) => {
-      let routes = [];
+    return routes.map(({ path, component: Component, children, key, actions }) => {
+      let routes = []
       if (children) {
-        routes = routes.concat(this.createRoute(children));
+        routes = routes.concat(this.createRoute(children))
       }
       if (Component) {
-
         routes = routes.concat(
           <Route
             exact
@@ -376,9 +375,9 @@ export default class Home extends Component {
               </BasePage>
             )}
           />
-        );
+        )
       }
-      return routes;
-    });
+      return routes
+    })
   }
 }

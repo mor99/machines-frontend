@@ -23,9 +23,9 @@
         "react"
     ],
     "rules": {
-        "indent":"off",
-        "react/jsx-closing-tag-location":"off"
+        "indent": "off",
+        "react/jsx-closing-tag-location": "off",
+        "react/jsx-handler-names": "off"
     },
     "parser": "babel-eslint"
-
 }

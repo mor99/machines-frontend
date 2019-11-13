@@ -1,32 +1,31 @@
-import React from 'react';
-import { Switch, Button, } from 'antd';
-import { withRouter, } from 'react-router-dom';
-import CreateTable from '../../../libs/components/create-table/index';
-import FormModal from '../../../libs/components/form-modal/index';
-import BaseComponent from '../../../libs/components/base-component';
-import FarmType from '../../../store/farm-type';
+import React from 'react'
+import { Switch, Button } from 'antd'
+import { withRouter } from 'react-router-dom'
+import CreateTable from '../../../libs/components/create-table/index'
+import FormModal from '../../../libs/components/form-modal/index'
+import BaseComponent from '../../../libs/components/base-component'
+import FarmType from '../../../store/farm-type'
 
 @withRouter
-
 export default class UserList extends BaseComponent {
   state = {
     formData: {},
     no: this.$getNavParams().id,
-    info: {},
+    info: {}
   };
 
   componentDidMount () {
     FarmType.getTypeList().then(() => {
-      const { no, } = this.state;
+      const { no } = this.state
       this.setState({
-        info: FarmType.type ? FarmType.type.filter(v => v.no === no)[0] : {},
-      });
-    });
+        info: FarmType.type ? FarmType.type.filter(v => v.no === no)[0] : {}
+      })
+    })
   }
 
   render () {
-    const { parent, } = this.props;
-    const { formData, info, no, } = this.state;
+    const { parent } = this.props
+    const { formData, info, no } = this.state
     return (
       <div className='common-app farm-type-detail'>
         <div className='header-wrap'>
@@ -49,10 +48,10 @@ export default class UserList extends BaseComponent {
                     permission='add'
                     onClick={() => {
                       this.setState({
-                        formData: {},
+                        formData: {}
                       }, () => {
-                        this.modalRef.show(true);
-                      });
+                        this.modalRef.show(true)
+                      })
                     }}
                   >
                     新增型号
@@ -63,45 +62,45 @@ export default class UserList extends BaseComponent {
           </div>
         </div>
         <CreateTable
-          wrappedComponentRef={ref => this.createTableRef = ref}
+          wrappedComponentRef={ref => (this.createTableRef = ref)}
           url={`${no}/listByPage`}
           columns={this.tableColumns()}
           actionColumns={this.getActionColumns()}
         // ref={ref => this.createTableRef = ref}
         />
         <FormModal
-          ref={ref => this.modalRef = ref}
+          ref={ref => (this.modalRef = ref)}
           title='型号'
           detailData={formData}
           actionSrc={
             {
               edit: `${no}/update`,
-              add: `${no}/add`,
-            }
+              add: `${no}/add`
+          }
           }
           items={this.getFormItems}
           onOk={() => {
-            this.createTableRef.onSearch();
+            this.createTableRef.onSearch()
           }}
         />
       </div>
-    );
+    )
   }
 
   openItem = async (value, item) => {
-    const { no, } = this.state;
-    const { code, message, } = await this.$post(`${no}/update`, Object.assign({}, item, { isEnable: value, }));
+    const { no } = this.state
+    const { code, message } = await this.$post(`${no}/update`, Object.assign({}, item, { isEnable: value }))
     if (code) {
-      this.$error(message);
+      this.$error(message)
     } else {
-      this.createTableRef.onSearch();
+      this.createTableRef.onSearch()
     }
   }
 
   goEdit = (item) => {
     this.setState({
-      formData: item,
-    }, this.modalRef.show);
+      formData: item
+    }, this.modalRef.show)
   };
 
   getFormItems = [
@@ -110,8 +109,8 @@ export default class UserList extends BaseComponent {
       name: 'no',
       rule: {
         required: true,
-        pattern: this.$regular.CommonInputRule,
-      },
+        pattern: this.$regular.CommonInputRule
+      }
     },
     {
       title: '除草机臂长(m)',
@@ -120,9 +119,9 @@ export default class UserList extends BaseComponent {
         required: true,
         pattern: {
           reg: this.$regular.allNumber,
-          message: '只支持数字，正整数或至多2位小数',
-        },
-      },
+          message: '只支持数字，正整数或至多2位小数'
+        }
+      }
     },
     {
       title: '作业宽度(m)',
@@ -131,62 +130,62 @@ export default class UserList extends BaseComponent {
         required: true,
         pattern: {
           reg: this.$regular.allNumber,
-          message: '只支持数字，正整数或至多2位小数',
-        },
-      },
-    },
+          message: '只支持数字，正整数或至多2位小数'
+        }
+      }
+    }
   ];
 
   getActionColumns = () => {
-    const { no, } = this.state;
+    const { no } = this.state
     return [
       {
         type: 'edit',
         permission: 'edit',
         onClick: (e, text, record) => {
           this.setState({
-            formData: record,
-          }, this.modalRef.show);
-        },
+            formData: record
+          }, this.modalRef.show)
+        }
       },
       {
         type: 'del',
         permission: 'delete',
-        url: `${no}/delete`,
-      },
-    ];
+        url: `${no}/delete`
+      }
+    ]
   };
 
   tableColumns = () => {
     return [
       {
         title: '农机型号',
-        dataIndex: 'no',
+        dataIndex: 'no'
       },
       {
         title: '除草机臂长(m)',
-        dataIndex: 'mowerArmExtension',
+        dataIndex: 'mowerArmExtension'
       },
       {
         title: '作业宽度(m)',
-        dataIndex: 'workWidth',
+        dataIndex: 'workWidth'
       },
       {
         title: '启用该型号',
         dataIndex: 'isEnable',
-        render: (text, record,) => {
-          const { parent, } = this.props;
+        render: (text, record) => {
+          const { parent } = this.props
           return parent.$generatePowerElements(
             <Switch
               permission='isScrap'
               onChange={(e) => {
-                this.openItem(e, record);
+                this.openItem(e, record)
               }}
               defaultChecked={record.isEnable}
             />
-          );
-        },
-      },
-    ];
+          )
+        }
+      }
+    ]
   }
 }

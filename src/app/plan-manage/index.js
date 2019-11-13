@@ -1,25 +1,25 @@
-import React from 'react';
-import { withRouter, } from 'react-router-dom';
-import { message, Modal, Input, } from 'antd';
-import './index.less';
-import BaseComponent from '../../libs/components/base-component';
-import FormModal from '../../libs/components/form-modal/index';
-import CreateTable from '../../libs/components/create-table/index';
+import React from 'react'
+import { withRouter } from 'react-router-dom'
+import { message, Modal, Input } from 'antd'
+import './index.less'
+import BaseComponent from '../../libs/components/base-component'
+import FormModal from '../../libs/components/form-modal/index'
+import CreateTable from '../../libs/components/create-table/index'
 
-let modalRef;
+let modalRef
 
 @withRouter
 export default class PlanManage extends BaseComponent {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
       editItem: {},
-      uploading: false,
-    };
+      uploading: false
+    }
   }
 
   render () {
-    const { editItem, planNumList, keyWord, } = this.state;
+    const { editItem, planNumList, keyWord } = this.state
     return (
       <div className='plan-manage'>
         <div className='plan-head'>
@@ -41,12 +41,12 @@ export default class PlanManage extends BaseComponent {
             <h4>计划列表</h4>
             <Input.Search
               placeholder='请输入'
-              style={{ width: 200, }}
+              style={{ width: 200 }}
               onSearch={value => {
                 this.setState(
-                  { keyWord: value, },
+                  { keyWord: value },
                   this.createTableRef.onSearch
-                );
+                )
               }}
             />
           </div>
@@ -67,7 +67,7 @@ export default class PlanManage extends BaseComponent {
               ref={ref => (this.tableRef = ref)}
               wrappedComponentRef={ref => (this.createTableRef = ref)}
               url='plan/listByPage'
-              otherParams={{ keyWord, }}
+              otherParams={{ keyWord }}
               columns={this.columns}
             />
           </div>
@@ -76,8 +76,8 @@ export default class PlanManage extends BaseComponent {
             actionSrc={
               {
                 edit: 'plan/update',
-                add: 'plan/add',
-              }
+                add: 'plan/add'
+            }
             }
             detailData={editItem}
             submitFormat={this.formatInputData}
@@ -87,24 +87,24 @@ export default class PlanManage extends BaseComponent {
           />
         </div>
       </div>
-    );
+    )
   }
 
   formItems = [
     {
       title: '计划名称',
       name: 'name',
-      rule: { required: true, },
+      rule: { required: true }
     },
     {
       title: '描述',
       type: 'TextArea',
-      name: 'description',
-    },
+      name: 'description'
+    }
   ];
 
   componentDidMount () {
-    this.getPlanNum();
+    this.getPlanNum()
   }
 
   /**
@@ -115,29 +115,29 @@ export default class PlanManage extends BaseComponent {
   openModal = (row = {}, isAdd = true) => {
     this.setState({
       editItem: isAdd ? {} : row,
-      changeItem: { ...row, isAdd, },
+      changeItem: { ...row, isAdd }
     }, () => {
-      this.modalRef.show(isAdd);
-    });
+      this.modalRef.show(isAdd)
+    })
   }
 
   modalOk = () => {
-    this.createTableRef.onSearch();
-    this.getPlanNum();
+    this.createTableRef.onSearch()
+    this.getPlanNum()
   }
 
-  formatInputData = (inputVal,) => {
-    const { changeItem, } = this.state;
+  formatInputData = (inputVal) => {
+    const { changeItem } = this.state
     if (changeItem && changeItem.isAdd) {
       return {
         ...inputVal,
-        parentId: changeItem.id === undefined ? 0 : changeItem.id,
-      };
+        parentId: changeItem.id === undefined ? 0 : changeItem.id
+      }
     } else {
       return {
         ...changeItem,
-        ...inputVal,
-      };
+        ...inputVal
+      }
     }
   };
 
@@ -149,28 +149,28 @@ export default class PlanManage extends BaseComponent {
       cancelText: '取消',
       destroyOnClose: true,
       onOk: () => {
-        this.deleteRow(row);
-      },
-    });
+        this.deleteRow(row)
+      }
+    })
   };
 
-  deleteRow = async ({ id, }) => {
-    const { code, message: msg, } = await this.$get(`plan/delete/${id}`);
+  deleteRow = async ({ id }) => {
+    const { code, message: msg } = await this.$get(`plan/delete/${id}`)
     if (code) {
-      message.error(msg);
+      message.error(msg)
     } else {
-      message.success(msg);
-      this.createTableRef.onSearch();
-      this.getPlanNum();
+      message.success(msg)
+      this.createTableRef.onSearch()
+      this.getPlanNum()
     }
   };
 
   getPlanNum = async () => {
-    const { code, data, } = await this.$get('plan/planTaskNum');
+    const { code, data } = await this.$get('plan/planTaskNum')
     if (!code) {
       this.setState({
-        planNumList: data,
-      });
+        planNumList: data
+      })
     }
   }
 
@@ -178,7 +178,7 @@ export default class PlanManage extends BaseComponent {
    * 关闭弹窗
    */
   componentWillUnmount () {
-    modalRef && modalRef.destroy();
+    modalRef && modalRef.destroy()
   }
 
   columns = [
@@ -195,10 +195,10 @@ export default class PlanManage extends BaseComponent {
       align: 'center',
       render: (text, data) => (
         <div>
-          <p style={{ fontWeight: 'bolder', }}>{data.name}</p>
+          <p style={{ fontWeight: 'bolder' }}>{data.name}</p>
           <p>{this.$helpers.formatValue(text)}</p>
         </div>
-      ),
+      )
     },
     {
       title: '任务总数',
@@ -210,7 +210,7 @@ export default class PlanManage extends BaseComponent {
           <p>任务总数</p>
           <p>{text || 0}项</p>
         </div>
-      ),
+      )
     },
     {
       title: '创建人',
@@ -222,7 +222,7 @@ export default class PlanManage extends BaseComponent {
           <p>创建人</p>
           <p>{text}</p>
         </div>
-      ),
+      )
     },
     {
       title: '操作',
@@ -235,7 +235,7 @@ export default class PlanManage extends BaseComponent {
               <span
                 permission='detail'
                 onClick={() => {
-                  this.$navGo(`./planManage/planManageDetail/${record.id}`);
+                  this.$navGo(`./planManage/planManageDetail/${record.id}`)
                 }}
               >查看详情
               </span>
@@ -246,7 +246,7 @@ export default class PlanManage extends BaseComponent {
               <span
                 permission='edit'
                 onClick={() => {
-                  this.openModal(record, false);
+                  this.openModal(record, false)
                 }}
               >编辑
               </span>
@@ -258,14 +258,14 @@ export default class PlanManage extends BaseComponent {
                 className='del'
                 permission='delete'
                 onClick={() => {
-                  this.delConfirm(record);
+                  this.delConfirm(record)
                 }}
               >删除
               </span>
             )
           }
         </div>
-      ),
-    },
+      )
+    }
   ];
 }

@@ -1,7 +1,7 @@
-import React from 'react';
-import { withRouter, } from 'react-router-dom';
-import CreateTable from '../../libs/components/create-table';
-import BaseComponent from '../../libs/components/base-component';
+import React from 'react'
+import { withRouter } from 'react-router-dom'
+import CreateTable from '../../libs/components/create-table'
+import BaseComponent from '../../libs/components/base-component'
 
 @withRouter
 
@@ -19,21 +19,21 @@ export default class DigitalArchives extends BaseComponent {
             return data.map(z => {
               return {
                 title: `${z.name} / ${z.workType}`,
-                value: z.no,
-              };
-            });
+                value: z.no
+              }
+            })
           }
-          return [];
-        },
+          return []
+        }
       },
       {
         name: 'name',
         title: '农机名称',
         otherParams: {
-          placeholder: '请输入农机名称',
-        },
-      },
-    ];
+          placeholder: '请输入农机名称'
+        }
+      }
+    ]
   };
 
   getActionColumns = () => {
@@ -42,26 +42,26 @@ export default class DigitalArchives extends BaseComponent {
         type: 'edit',
         permission: 'detail',
         title: '详情',
-        onClick: (e, text, record,) => {
-          this.$navGo(`/digitalArchives/digitalArchivesDetail/${record.id}`);
-        },
-      },
-    ];
+        onClick: (e, text, record) => {
+          this.$navGo(`/digitalArchives/digitalArchivesDetail/${record.id}`)
+        }
+      }
+    ]
   };
 
   tableColumns = () => {
     return [
       {
         title: '农机名称',
-        dataIndex: 'name',
+        dataIndex: 'name'
       },
       {
         title: '农机类型',
-        dataIndex: 'farmMachineTypeName',
+        dataIndex: 'farmMachineTypeName'
       },
       {
         title: '作业类型',
-        dataIndex: 'workType',
+        dataIndex: 'workType'
       },
       {
         title: '状态',
@@ -73,10 +73,10 @@ export default class DigitalArchives extends BaseComponent {
             >
               {status ? '报废' : '启用'}
             </span>
-          );
-        },
-      },
-    ];
+          )
+        }
+      }
+    ]
   }
 
   render () {
@@ -87,9 +87,9 @@ export default class DigitalArchives extends BaseComponent {
           url='machine/listByPage'
           columns={this.tableColumns()}
           actionColumns={this.getActionColumns()}
-          wrappedComponentRef={ref => this.createTableRef = ref}
+          wrappedComponentRef={ref => (this.createTableRef = ref)}
         />
       </div>
-    );
+    )
   }
 }

@@ -1,95 +1,100 @@
-import React from "react";
-import { Table, Button, message, Modal, } from "antd";
-import FormModal from "../../../libs/components/form-modal/index";
-import InputForm from './input-form';
-import './index.less';
-import BaseComponent from "../../../libs/components/base-component";
+import React from 'react'
+import { Table, Button, message, Modal } from 'antd'
+import FormModal from '../../../libs/components/form-modal/index'
+import InputForm from './input-form'
+import './index.less'
+import BaseComponent from '../../../libs/components/base-component'
 
-let modalRef;
+let modalRef
 
 export default class Organization extends BaseComponent {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       editItem: {},
       data: [],
-      uploading: false,
-    };
+      uploading: false
+    }
   }
-  render() {
-    const { data, editItem, } = this.state;
+
+  render () {
+    const { data, editItem } = this.state
     return (
       <div>
-        <div className="common-container organization-table">
+        <div className='common-container organization-table'>
           <Table
-            rowKey={({ id, }) => id}
+            rowKey={({ id }) => id}
             dataSource={data}
             pagination={false}
             columns={this.columns}
             footer={this.tableFooter}
           />
           <FormModal
-            title="组织机构"
+            title='组织机构'
             ModalContent={InputForm}
             actionSrc={
               {
-                edit: "organization/organizationEdit",
-                add: "organization/organizationAdd",
-              }
+                edit: 'organization/organizationEdit',
+                add: 'organization/organizationAdd'
+            }
             }
             detailData={editItem}
             submitFormat={this.formatInputData}
             items={this.formItems}
             onOk={this.modalOk}
-            ref={ref => this.modalRef = ref}
+            ref={ref => (this.modalRef = ref)}
           />
         </div>
       </div>
-    );
+    )
   }
+
   formItems = [
     {
-      title: "机构名称",
-      name: "name",
+      title: '机构名称',
+      name: 'name'
     },
     {
-      title: "备注",
-      name: "remark",
-    },
+      title: '备注',
+      name: 'remark'
+    }
   ];
 
-  componentDidMount() {
-    this.getAllItem();
+  componentDidMount () {
+    this.getAllItem()
   }
+
   modalOk = () => {
-    this.getAllItem();
+    this.getAllItem()
   }
+
   /**
    * 获取所有组织机构
    * @returns {Promise<void>}
    */
-  async getAllItem() {
-    const { code, data, message: msg, } = await this.$get('organization/organizationList');
+  async getAllItem () {
+    const { code, data, message: msg } = await this.$get('organization/organizationList')
     if (code) {
-      message.error(msg);
+      message.error(msg)
     } else {
       this.setState({
-        data: data,
-      });
+        data: data
+      })
     }
   }
-  formatInputData = (inputVal, ) => {
-    const { changeItem, } = this.state;
+
+  formatInputData = (inputVal) => {
+    const { changeItem } = this.state
     if (changeItem && changeItem.isAdd) {
       return {
         ...inputVal,
-        parentId: changeItem.id === undefined ? 0 : changeItem.id,
-      };
+        parentId: changeItem.id === undefined ? 0 : changeItem.id
+      }
     } else {
       return {
         ...changeItem,
-        ...inputVal,
-      };
+        ...inputVal
+      }
     }
   };
 
@@ -101,24 +106,27 @@ export default class Organization extends BaseComponent {
       cancelText: '取消',
       destroyOnClose: true,
       onOk: () => {
-        this.deleteRow(row);
-      },
-    });
+        this.deleteRow(row)
+      }
+    })
   };
-  deleteRow = async ({ id, }) => {
-    const { code, message: msg, } = await this.$get(`organization/deleteOrganization/${id}`);
+
+  deleteRow = async ({ id }) => {
+    const { code, message: msg } = await this.$get(`organization/deleteOrganization/${id}`)
     if (code) {
-      message.error(msg);
+      message.error(msg)
     } else {
-      this.getAllItem();
+      this.getAllItem()
     }
   }
+
   /**
    * 关闭弹窗
    */
-  componentWillUnmount() {
-    modalRef && modalRef.destroy();
+  componentWillUnmount () {
+    modalRef && modalRef.destroy()
   }
+
   /**
    * 打开弹窗
    * @param row
@@ -127,65 +135,67 @@ export default class Organization extends BaseComponent {
   openModal = (row = {}, isAdd = true) => {
     this.setState({
       editItem: isAdd ? {} : row,
-      changeItem: { ...row, isAdd, },
+      changeItem: { ...row, isAdd }
     }, () => {
-      this.modalRef.show(isAdd);
-    });
+      this.modalRef.show(isAdd)
+    })
   }
+
   tableFooter = () => {
     return this.$generatePowerElements(
       <Button
-        permission="add"
+        permission='add'
         onClick={this.openModal}
       >
         新增节点
       </Button>,
       'disable'
-    );
+    )
   }
+
   columns = [
     {
       title: '机构名称',
       dataIndex: 'name',
-      key: 'name',
+      key: 'name'
     },
     {
       title: '备注',
       dataIndex: 'remark',
       key: 'remark',
       width: 360,
-      render: (text) => this.$helpers.formatValue(text),
+      render: (text) => this.$helpers.formatValue(text)
     },
     {
       title: '操作',
       key: 'action',
       width: 360,
       render: (text, record) => (
-        <div className="common-table-action">
+        <div className='common-table-action'>
           <span
             onClick={() => {
-              this.openModal(record, true);
+              this.openModal(record, true)
             }}
           >
             添加子节点
           </span>
           <span
             onClick={() => {
-              this.openModal(record, false);
+              this.openModal(record, false)
             }}
           >
             编辑
           </span>
           <span
-            className="del"
+            className='del'
             onClick={() => {
-              this.delConfirm(record);
+              this.delConfirm(record)
             }}
           >
             删除
           </span>
         </div>
-      ),
-    },
+      )
+    }
   ];
 }

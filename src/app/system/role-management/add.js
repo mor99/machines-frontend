@@ -1,22 +1,22 @@
-import React from 'react';
-import CreateForm from '../../../libs/components/create-add-or-edit-page';
-import './index.less';
-import RuleTree from './create-rule-tree';
-import BaseComponent from '../../../libs/components/base-component';
+import React from 'react'
+import CreateForm from '../../../libs/components/create-add-or-edit-page'
+import './index.less'
+import RuleTree from './create-rule-tree'
+import BaseComponent from '../../../libs/components/base-component'
 
 export default class RuleList extends BaseComponent {
   constructor (props) {
-    super(props);
+    super(props)
     this.state = {
-    };
+    }
   }
 
   info = [
     {
       title: '基础信息',
       formItemLayout: {
-        labelCol: { span: 6, },
-        wrapperCol: { span: 14, },
+        labelCol: { span: 6 },
+        wrapperCol: { span: 14 }
       },
       data: [
         {
@@ -26,11 +26,11 @@ export default class RuleList extends BaseComponent {
             required: true,
             pattern: {
               reg: this.$regular.chinese10,
-              message: '只支持中文，2-10个字符',
-            },
-          },
-        },
-      ],
+              message: '只支持中文，2-10个字符'
+            }
+          }
+        }
+      ]
     },
     {
       title: '权限配置',
@@ -38,16 +38,16 @@ export default class RuleList extends BaseComponent {
         <RuleTree
           ref={ref => this.ruleTreeRef = ref}
         />
-      ),
-    },
+      )
+    }
   ];
 
   formatSubmit = (a) => {
-    const data = this.ruleTreeRef.getData();
+    const data = this.ruleTreeRef.getData()
     return {
       name: a.ruleName,
-      power: JSON.stringify(data),
-    };
+      power: JSON.stringify(data)
+    }
   };
 
   render () {
@@ -59,6 +59,6 @@ export default class RuleList extends BaseComponent {
           info={this.info}
         />
       </div>
-    );
+    )
   }
 }

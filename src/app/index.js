@@ -1,47 +1,47 @@
-import React, {Component,} from "react";
-import {hot,} from "react-hot-loader";
-import {Route, withRouter, Switch, Redirect,} from "react-router-dom";
-import Login from "app/login";
-import Home from "app/home";
-import Cookies from "js-cookie";
+import React, { Component } from 'react'
+import { hot } from 'react-hot-loader'
+import { Route, withRouter, Switch, Redirect } from 'react-router-dom'
+import Login from 'app/login'
+import Home from 'app/home'
+import Cookies from 'js-cookie'
 
 @withRouter
 class App extends Component {
-  render() {
-    const Token = Cookies.get("SystemToken");
+  render () {
+    const Token = Cookies.get('SystemToken')
     return (
-      <div className="index">
+      <div className='index'>
         <Switch>
           <Route
-            path="/login"
+            path='/login'
             render={
               () => {
-                return Token ? <Redirect to="/home" /> : <Login />;
-              }
+                return Token ? <Redirect to='/home' /> : <Login />
+            }
             }
           />
           <Route
-            path="/"
+            path='/'
             render={
               () => {
-                return Token ? <Home />: (
-                  <Redirect to="/login" />
-                );
-              }
+                return Token ? <Home /> : (
+                  <Redirect to='/login' />
+                )
+            }
             }
           />
           <Route render={
             () => {
-              return Token ? (<Redirect to="/" />) : (
-                <Redirect to="/login" />
-              );
-            }
+              return Token ? (<Redirect to='/' />) : (
+                <Redirect to='/login' />
+              )
+          }
           }
           />
         </Switch>
       </div>
-    );
+    )
   }
 }
 
-export default hot(module)(App);
+export default hot(module)(App)

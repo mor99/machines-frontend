@@ -1,6 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { Input, message, Select, Icon, Row, Col } from 'antd'
+import { Input, message, Select, Icon } from 'antd'
 import { inject, observer } from 'mobx-react'
 // import MyIcon from "../../libs/components/icon/index";
 import './index.less'

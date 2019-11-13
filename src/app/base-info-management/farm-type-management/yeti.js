@@ -1,10 +1,10 @@
-import React from "react";
-import { Switch, Button, } from 'antd';
-import { withRouter, } from 'react-router-dom';
-import CreateTable from "../../../libs/components/create-table/index";
-import FormModal from "../../../libs/components/form-modal/index";
-import BaseComponent from '../../../libs/components/base-component';
-import FarmType from '../../../store/farm-type';
+import React from 'react'
+import { Switch, Button } from 'antd'
+import { withRouter } from 'react-router-dom'
+import CreateTable from '../../../libs/components/create-table/index'
+import FormModal from '../../../libs/components/form-modal/index'
+import BaseComponent from '../../../libs/components/base-component'
+import FarmType from '../../../store/farm-type'
 
 @withRouter
 
@@ -12,45 +12,47 @@ export default class UserList extends BaseComponent {
   state = {
     formData: {},
     no: this.$getNavParams().id,
-    info: {},
+    info: {}
   };
-  componentDidMount() {
+
+  componentDidMount () {
     FarmType.getTypeList().then(() => {
-      const { no, } = this.state;
+      const { no } = this.state
       this.setState({
-        info: FarmType.type ? FarmType.type.filter(v => v.no === no)[0] : {},
-      });
-    });
+        info: FarmType.type ? FarmType.type.filter(v => v.no === no)[0] : {}
+      })
+    })
   }
-  render() {
-    const { parent, } = this.props;
-    const { formData, info, no, } = this.state;
+
+  render () {
+    const { parent } = this.props
+    const { formData, info, no } = this.state
     return (
-      <div className="common-app farm-type-detail">
-        <div className="header-wrap">
-          <div className="header-top">
-            <p className="common-subtitle">{this.$helpers.formatValue(info.name)}</p>
+      <div className='common-app farm-type-detail'>
+        <div className='header-wrap'>
+          <div className='header-top'>
+            <p className='common-subtitle'>{this.$helpers.formatValue(info.name)}</p>
             <p>
               <span>作业类型：</span>
-              <span className="light">{this.$helpers.formatValue(info.workType)}</span>
+              <span className='light'>{this.$helpers.formatValue(info.workType)}</span>
             </p>
           </div>
-          <div className="header-bottom">
+          <div className='header-bottom'>
             <div>
-              <p className="common-subtitle">农机型号管理</p>
+              <p className='common-subtitle'>农机型号管理</p>
             </div>
             <div>
               {
                 parent && parent.$generatePowerElements(
                   <Button
-                    type="primary"
-                    permission="add"
+                    type='primary'
+                    permission='add'
                     onClick={() => {
                       this.setState({
-                        formData: {},
+                        formData: {}
                       }, () => {
-                        this.modalRef.show(true);
-                      });
+                        this.modalRef.show(true)
+                      })
                     }}
                   >
                     新增型号
@@ -61,125 +63,130 @@ export default class UserList extends BaseComponent {
           </div>
         </div>
         <CreateTable
-          wrappedComponentRef={ref => this.createTableRef = ref}
+          wrappedComponentRef={ref => (this.createTableRef = ref)}
           url={`${no}/listByPage`}
           columns={this.tableColumns()}
           actionColumns={this.getActionColumns()}
-        //ref={ref => this.createTableRef = ref}
+        // ref={ref => this.createTableRef = ref}
         />
         <FormModal
-          ref={ref => this.modalRef = ref}
-          title="型号"
+          ref={ref => (this.modalRef = ref)}
+          title='型号'
           detailData={formData}
           actionSrc={
             {
               edit: `${no}/update`,
-              add: `${no}/add`,
-            }
+              add: `${no}/add`
+          }
           }
           items={this.getFormItems}
           onOk={() => {
-            this.createTableRef.onSearch();
+            this.createTableRef.onSearch()
           }}
         />
       </div>
-    );
+    )
   }
+
   openItem = async (value, item) => {
-    const { no, } = this.state;
-    let { code, message, } = await this.$post(`${no}/update`, Object.assign({}, item, { isEnable: value, }));
+    const { no } = this.state
+    const { code, message } = await this.$post(`${no}/update`, Object.assign({}, item, { isEnable: value }))
     if (code) {
-      this.$error(message);
+      this.$error(message)
     } else {
-      this.createTableRef.onSearch();
+      this.createTableRef.onSearch()
     }
   }
+
   goEdit = (item) => {
     this.setState({
-      formData: item,
-    }, this.modalRef.show);
+      formData: item
+    }, this.modalRef.show)
   };
+
   getFormItems = [
     {
-      title: "农机型号",
+      title: '农机型号',
       name: 'no',
       rule: {
         required: true,
-        pattern: this.$regular.CommonInputRule,
-      },
+        pattern: this.$regular.CommonInputRule
+      }
     },
     {
-      title: "药液容量(L)",
+      title: '药液容量(L)',
       name: 'liquidCapacity',
       rule: {
         required: true,
         pattern: {
           reg: this.$regular.allNumber,
-          message: '只支持数字，正整数或至多2位小数',
-        },
-      },
+          message: '只支持数字，正整数或至多2位小数'
+        }
+      }
     },
     {
-      title: "作业宽度(m)",
+      title: '作业宽度(m)',
       name: 'workWidth',
       rule: {
         required: true,
         pattern: {
           reg: this.$regular.allNumber,
-          message: '只支持数字，正整数或至多2位小数',
-        },
-      },
-    },
+          message: '只支持数字，正整数或至多2位小数'
+        }
+      }
+    }
   ];
+
   getActionColumns = () => {
-    const { no, } = this.state;
+    const { no } = this.state
     return [
       {
-        type: "edit",
-        permission: "edit",
-        onClick: (e,text,record) => {
+        type: 'edit',
+        permission: 'edit',
+        onClick: (e, text, record) => {
           this.setState({
-            formData: record,
-          } , this.modalRef.show);
-        },
+            formData: record
+          }, this.modalRef.show)
+        }
       },
       {
-        type: "del",
-        permission: "delete",
-        url: `${no}/delete`,
-      },
-    ];
+        type: 'del',
+        permission: 'delete',
+        url: `${no}/delete`
+      }
+    ]
   };
+
   tableColumns = () => {
     return [
       {
-        title: "农机型号",
-        dataIndex: "no",
+        title: '农机型号',
+        dataIndex: 'no'
       },
       {
-        title: "药液容量(L)",
-        dataIndex: "liquidCapacity",
+        title: '药液容量(L)',
+        dataIndex: 'liquidCapacity'
       },
       {
-        title: "作业宽度(m)",
-        dataIndex: "workWidth",
+        title: '作业宽度(m)',
+        dataIndex: 'workWidth'
       },
       {
-        title: "启用该型号",
-        dataIndex: "isEnable",
-        render: (text, record, ) => {
-          const { parent, } = this.props;
+        title: '启用该型号',
+        dataIndex: 'isEnable',
+        render: (text, record) => {
+          const { parent } = this.props
           return parent.$generatePowerElements(
             <Switch
-              permission="isScrap"
+              permission='isScrap'
               onChange={(e) => {
-                this.openItem(e,record);
+                this.openItem(e, record)
               }}
               defaultChecked={record.isEnable}
             />
-          );
-        },
-      },
-    ];
+          )
+        }
+      }
+    ]
   }
 }

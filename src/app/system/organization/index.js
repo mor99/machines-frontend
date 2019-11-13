@@ -1,28 +1,29 @@
-import React from "react";
-import { Table, Button, Modal, } from "antd";
-import FormModal from "../../../libs/components/form-modal/index";
-import InputForm from './input-form';
-import './index.less';
-import BaseComponent from "../../../libs/components/base-component";
+import React from 'react'
+import { Table, Button, Modal } from 'antd'
+import FormModal from '../../../libs/components/form-modal/index'
+import InputForm from './input-form'
+import './index.less'
+import BaseComponent from '../../../libs/components/base-component'
 
-let modalRef;
+let modalRef
 
 export default class Organization extends BaseComponent {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       editItem: {},
       data: [],
-      uploading: false,
-    };
+      uploading: false
+    }
   }
-  render() {
-    const { data, editItem, } = this.state;
+
+  render () {
+    const { data, editItem } = this.state
     return (
-      <div className="common-app">
-        <div className="common-container organization-table">
+      <div className='common-app'>
+        <div className='common-container organization-table'>
           <Table
-            rowKey={({ id, }) => id}
+            rowKey={({ id }) => id}
             dataSource={data}
             pagination={false}
             columns={this.columns}
@@ -30,97 +31,101 @@ export default class Organization extends BaseComponent {
               return this.$generatePowerElements(
                 <Button
                   onClick={this.openModal}
-                  permission="add"
+                  permission='add'
                 >
                   新增节点
                 </Button>
-                , "visible"
-              );
+                , 'visible'
+              )
             }}
           />
           <FormModal
-            title="组织机构"
+            title='组织机构'
             ModalContent={InputForm}
             actionSrc={
               {
-                edit: "organization/update",
-                add: "organization/add",
-              }
+                edit: 'organization/update',
+                add: 'organization/add'
+            }
             }
             detailData={editItem}
             submitFormat={this.formatInputData}
             items={this.formItems}
             onOk={this.modalOk}
-            ref={ref => this.modalRef = ref}
+            ref={ref => (this.modalRef = ref)}
           />
         </div>
       </div>
-    );
+    )
   }
+
   formItems = [
     {
-      title: "机构名称",
-      name: "name",
+      title: '机构名称',
+      name: 'name',
       rule: {
         required: true,
         pattern: {
           reg: this.$regular.chinese10,
-          message: '只支持中文，2-10个字符',
-        },
-      },
+          message: '只支持中文，2-10个字符'
+        }
+      }
     },
     {
-      title: "机构码",
-      name: "no",
+      title: '机构码',
+      name: 'no',
       rule: {
         required: true,
         pattern: {
           reg: this.$regular.numberInt,
-          message: '只支持数字，2-10个字符',
-        },
-      },
+          message: '只支持数字，2-10个字符'
+        }
+      }
     },
     {
-      title: "备注",
-      name: "remark",
+      title: '备注',
+      name: 'remark',
       rule: {
-        pattern: this.$regular.CommonInputRule,
-      },
-    },
+        pattern: this.$regular.CommonInputRule
+      }
+    }
   ];
 
-  componentDidMount() {
-    this.getAllItem();
+  componentDidMount () {
+    this.getAllItem()
   }
+
   modalOk = () => {
-    this.getAllItem();
+    this.getAllItem()
   }
+
   /**
    * 获取所有组织机构
    * @returns {Promise<void>}
    */
-  async getAllItem() {
-    const { code, data, message, } = await this.$get('organization/listTree');
+  async getAllItem () {
+    const { code, data, message } = await this.$get('organization/listTree')
     if (code) {
-      this.$error(message);
+      this.$error(message)
     } else {
       this.setState({
-        data: data,
-      });
+        data: data
+      })
     }
   }
-  formatInputData = (inputVal, ) => {
-    const { changeItem, } = this.state;
+
+  formatInputData = (inputVal) => {
+    const { changeItem } = this.state
     if (changeItem && changeItem.isAdd) {
       return {
         ...inputVal,
-        parentId: changeItem.id === undefined ? 0 : changeItem.id,
-      };
+        parentId: changeItem.id === undefined ? 0 : changeItem.id
+      }
     } else {
       return {
         ...changeItem,
-        ...inputVal,
-      };
+        ...inputVal
+      }
     }
   };
 
@@ -132,24 +137,27 @@ export default class Organization extends BaseComponent {
       cancelText: '取消',
       destroyOnClose: true,
       onOk: () => {
-        this.deleteRow(row);
-      },
-    });
+        this.deleteRow(row)
+      }
+    })
   };
-  deleteRow = async ({ id, }) => {
-    const { code, message, } = await this.$get(`organization/delete/${id}`);
+
+  deleteRow = async ({ id }) => {
+    const { code, message } = await this.$get(`organization/delete/${id}`)
     if (code) {
-      this.$error(message);
+      this.$error(message)
     } else {
-      this.getAllItem();
+      this.getAllItem()
     }
   }
+
   /**
    * 关闭弹窗
    */
-  componentWillUnmount() {
-    modalRef && modalRef.destroy();
+  componentWillUnmount () {
+    modalRef && modalRef.destroy()
   }
+
   /**
    * 打开弹窗
    * @param row
@@ -158,11 +166,12 @@ export default class Organization extends BaseComponent {
   openModal = (row = {}, isAdd = true) => {
     this.setState({
       editItem: isAdd ? {} : row,
-      changeItem: { ...row, isAdd, },
+      changeItem: { ...row, isAdd }
     }, () => {
-      this.modalRef.show(isAdd);
-    });
+      this.modalRef.show(isAdd)
+    })
   }
+
   // tableFooter = () => {
   //   return this.$generatePowerElements(
   //     <Button
@@ -178,33 +187,33 @@ export default class Organization extends BaseComponent {
     {
       title: '机构名称',
       dataIndex: 'name',
-      key: 'name',
+      key: 'name'
     },
     {
       title: '机构码',
       dataIndex: 'no',
       key: 'no',
-      render: (text) => this.$helpers.formatValue(text),
+      render: (text) => this.$helpers.formatValue(text)
     },
     {
       title: '备注',
       dataIndex: 'remark',
       key: 'remark',
       width: 360,
-      render: (text) => this.$helpers.formatValue(text),
+      render: (text) => this.$helpers.formatValue(text)
     },
     {
       title: '操作',
       key: 'action',
       width: 360,
       render: (text, record) => (
-        <div className="common-table-action">
+        <div className='common-table-action'>
           {
             this.$generatePowerElements(
               <span
-                permission="add"
+                permission='add'
                 onClick={() => {
-                  this.openModal(record, true);
+                  this.openModal(record, true)
                 }}
               >添加子节点
               </span>
@@ -213,9 +222,9 @@ export default class Organization extends BaseComponent {
           {
             this.$generatePowerElements(
               <span
-                permission="edit"
+                permission='edit'
                 onClick={() => {
-                  this.openModal(record, false);
+                  this.openModal(record, false)
                 }}
               >编辑
               </span>
@@ -224,17 +233,17 @@ export default class Organization extends BaseComponent {
           {
             this.$generatePowerElements(
               <span
-                className="del"
-                permission="delete"
+                className='del'
+                permission='delete'
                 onClick={() => {
-                  this.delConfirm(record);
+                  this.delConfirm(record)
                 }}
               >删除
               </span>
             )
           }
         </div>
-      ),
-    },
+      )
+    }
   ];
 }

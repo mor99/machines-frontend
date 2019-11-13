@@ -1,9 +1,9 @@
-import React from 'react';
-import { Row, Col, Button, Modal, Input, } from 'antd';
-import { withRouter, } from 'react-router-dom';
-import BaseComponent from '../../../libs/components/base-component';
-import FarmType from '../../../store/farm-type';
-import './index.less';
+import React from 'react'
+import { Row, Col } from 'antd'
+import { withRouter } from 'react-router-dom'
+import BaseComponent from '../../../libs/components/base-component'
+import FarmType from '../../../store/farm-type'
+import './index.less'
 
 const photo = {
   liquidFertilizerMachine: require('../../../assets/img/liquidFertilizerMachine.png'),
@@ -11,44 +11,44 @@ const photo = {
   plantMachine: require('../../../assets/img/plantProtectMachine.png'),
   solidFertilizerMachine: require('../../../assets/img/plantProtectMachine.png'),
   ditchMachine: require('../../../assets/img/plantProtectMachine.png'),
-  mowerMachine: require('../../../assets/img/plantProtectMachine.png'),
-};
+  mowerMachine: require('../../../assets/img/plantProtectMachine.png')
+}
 
 @withRouter
 
 export default class FarmTypeManagement extends BaseComponent {
   state = {
-    items: [],
+    items: []
   }
 
   componentDidMount () {
     FarmType.getTypeList().then(() => {
       this.setState({
-        items: FarmType.type || [],
-      });
-    });
+        items: FarmType.type || []
+      })
+    })
   }
 
   showModal = () => {
     this.setState({
-      visible: true,
-    });
+      visible: true
+    })
   };
 
   handleOk = e => {
     this.setState({
-      visible: false,
-    });
+      visible: false
+    })
   };
 
   handleCancel = e => {
     this.setState({
-      visible: false,
-    });
+      visible: false
+    })
   };
 
   render () {
-    const { items, } = this.state;
+    const { items } = this.state
     return (
       <div className='farm-type-management'>
         <Row gutter={30}>
@@ -62,7 +62,7 @@ export default class FarmTypeManagement extends BaseComponent {
                   <div
                     className='col-contanier'
                     onClick={() => {
-                      this.$navGo(`/baseInfoManagement/farmTypeManagement/farmTypeManagementDetail/${v.no}`);
+                      this.$navGo(`/baseInfoManagement/farmTypeManagement/farmTypeManagementDetail/${v.no}`)
                     }}
                   >
                     <div
@@ -82,11 +82,11 @@ export default class FarmTypeManagement extends BaseComponent {
                     <div className='col-footer'>型号管理</div>
                   </div>
                 </Col>
-              );
+              )
             })
           }
         </Row>
       </div>
-    );
+    )
   }
 }
