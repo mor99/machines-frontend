@@ -384,6 +384,7 @@ export default class infoStatistics extends BaseComponent {
 
   // 喷药量情况
   renderFarmMedicine = (data) => {
+    const { workCurrent, rangeTime } = this.state
     const dom = 'farm_medicine'
     const myChart = echarts.init(document.getElementById(dom))
     if (data && data.length > 0) {
@@ -400,6 +401,7 @@ export default class infoStatistics extends BaseComponent {
     } else {
       this.renderNodata(dom, myChart)
     }
+    this.renderFarmamount()
   }
 
   // 作业时长
@@ -444,7 +446,33 @@ export default class infoStatistics extends BaseComponent {
     }
   }
 
-  render () {
+  // 作业量
+  renderFarmamount = function () {
+    // const { workCurrent, rangeTime } = this.state
+    const dom = 'suffix'
+    const mychart = document.getElementById(dom)
+    if (this.state.workCurrent === 'plantProtectMachine') {
+      mychart.innerHTML = '喷药量(M)'
+    }
+    else if (this.state.workCurrent === 'mowerMachine') {
+      mychart.innerHTML = '锄草次数'
+    }
+    else if (this.state.workCurrent === 'liquidFertilizerMachine') {
+      mychart.innerHTML = '喷药量(L)'
+    }
+    else if (this.state.workCurrent === 'plantMachine') {
+      mychart.innerHTML = '定植次数'
+    }
+    else if (this.state.workCurrent === 'solidFertilizerMachine') {
+      mychart.innerHTML = '施肥量(m³)'
+    }
+    else {
+      mychart.innerHTML = '开沟长度(M)'
+    }
+  }
+
+
+  render() {
     const { machineCurrent, machineOptions, activeTime, workCurrent, top, rangeDate, rangeTime } = this.state
     return (
       <div className='common-app info-statistics-wrap'>
@@ -702,8 +730,8 @@ export default class infoStatistics extends BaseComponent {
               <div className='common-subtitle'>
                 {activeTime !== -1
                   ? this.selectDate[activeTime].showText
-                  : rangeTime ? `${moment(rangeTime[0]).format('YYYY-MM-DD')}~${moment(rangeTime[1]).format('YYYY-MM-DD')} ` : ''}
-                喷药量情况(L)
+                  : rangeTime ? `${moment(rangeTime[0]).format('YYYY-MM-DD')}~${moment(rangeTime[1]).format('YYYY-MM-DD')} ` : '112'}
+                <span id='suffix' />
               </div>
               <div
                 id='farm_medicine'
